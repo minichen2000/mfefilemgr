@@ -1,0 +1,82 @@
+swagger: '2.0'
+info:
+  description: MFE QNMGR RESTful interface.
+  version: 1.0.12
+  title: Qnmgr API
+basePath: /
+schemes:
+  - http
+  - https
+paths:
+  '/buckets':
+    get:
+      tags:
+        - Buckets
+      summary: Get all Buckets
+      description: Get all Buckets
+      produces:
+        - application/json
+      operationId: getAllBuckets  
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Bucket'
+        '500':
+          description: Internal Error
+          schema:
+            $ref: '#/definitions/QnmgrErrorInfo'
+   
+          
+  '/buckets/{bucketname}':
+    get:
+      tags:
+        - Buckets
+      summary: Get bucket by name
+      description: Get bucket by name
+      produces:
+        - application/json
+      operationId: getBucketByName
+      parameters:
+        - in: path
+          name: bucketname
+          description: Name of bucket that needs to be fetched
+          required: true
+          type: string
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            $ref: '#/definitions/Bucket'
+        '400':
+          description: Invalid Name supplied
+        '404':
+          description: Bucket not found
+        '500':
+          description: Internal Error
+          schema:
+            $ref: '#/definitions/QnmgrErrorInfo'
+    
+          
+definitions:
+  Bucket:
+    type: object
+    description: the qn Bucket model
+    properties:
+      name:
+        type: string
+        description: 'name'
+      location:
+        type: string
+        
+  QnmgrErrorInfo:
+    type: object
+    properties:
+      code:
+        type: string
+      message:
+        type: string
+        example: File %s creation error
+          

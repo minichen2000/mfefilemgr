@@ -1,0 +1,1661 @@
+swagger: '2.0'
+info:
+  description: ENMS Adapter RESTful interface.
+  version: 1.0.12
+  title: Adapter API
+basePath: /
+schemes:
+  - http
+  - https
+paths:
+  '/nes':
+    get:
+      tags:
+        - adpNes
+      summary: Get NEs
+      description: get NEs from NMS
+      produces:
+        - application/json
+      operationId: getNes  
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/AdpNe'
+        '500':
+          description: Internal Error
+          schema:
+            $ref: '#/definitions/AdpErrorInfo'
+    post:
+      tags:
+        - adpNes
+      summary: Add NEs
+      description: '分配网元给该Adapter管理'
+      produces:
+        - application/json
+      consumes:
+        - application/json
+      operationId: addNe
+      parameters:
+        - name: ne
+          in: body
+          description: '需要分配的NE，仅传Adapter需要的属性即可'
+          required: true
+          schema:
+            $ref: '#/definitions/AdpNe'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/AdpNe'
+        '405':
+          description: Invalid input
+        '500':
+          description: Internal Error
+          schema:
+            $ref: '#/definitions/AdpErrorInfo'
+          
+    put:
+      tags:
+        - adpNes
+      summary: Update NE
+      description: 'Update an existing NE. (Jersey doesn''t support Patch,so have to use PUT)'
+      produces:
+        - application/json
+      consumes:
+        - application/json
+      operationId: updateNe
+      parameters:
+        - name: ne
+          in: body
+          description: NE object that needs to be updated
+          required: false
+          schema:
+            $ref: '#/definitions/AdpNe'
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Invalid ID supplied
+        '404':
+          description: NE not found
+        '405':
+          description: Validation exception
+        '500':
+          description: Internal Error
+          schema:
+            $ref: '#/definitions/AdpErrorInfo'
+          
+  '/nes/{neid}':
+    get:
+      tags:
+        - adpNes
+      summary: Find NE by ID
+      description: Returns an NE as per the ID
+      produces:
+        - application/json
+      operationId: getNeById
+      parameters:
+        - in: path
+          name: neid
+          description: ID of NE that needs to be fetched
+          required: true
+          type: string
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            $ref: '#/definitions/AdpNe'
+        '400':
+          description: Invalid ID supplied
+        '404':
+          description: NE not found
+        '500':
+          description: Internal Error
+          schema:
+            $ref: '#/definitions/AdpErrorInfo'
+    delete:
+      tags:
+        - adpNes
+      summary: Delete NE
+      description: This can only be done by the logged in user.
+      produces:
+        - application/json
+      operationId: deleteNe
+      parameters:
+        - in: path
+          name: neid
+          description: The NE's ID that needs to be deleted
+          required: true
+          type: string
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Invalid ID supplied
+        '404':
+          description: NE not found
+        '500':
+          description: Internal Error
+          schema:
+            $ref: '#/definitions/AdpErrorInfo'
+
+
+  '/nes/{neid}/supervision/start':
+    post:
+      tags:
+        - adpNes      
+      summary: '启动监控'
+      description: 开始监管网元
+      produces:
+        - application/json
+      operationId: startNeSupervision
+      parameters:
+        - name: neid
+          in: path
+          description: ID of NE that needs to be fetched
+          required: true
+          type: string
+      responses:
+        '200':
+          description: OK
+        '500':
+          description: Internal Error
+          schema:
+            $ref: '#/definitions/AdpErrorInfo'
+  '/nes/{neid}/supervision/stop':
+    post:
+      tags:
+        - adpNes      
+      description: 停止监管网元
+      produces:
+        - application/json
+      operationId: stopNeSupervision
+      parameters:
+        - name: neid
+          in: path
+          description: ID of NE that needs to be fetched
+          required: true
+          type: string
+      responses:
+        '200':
+          description: OK
+        '500':
+          description: Internal Error
+          schema:
+            $ref: '#/definitions/AdpErrorInfo'
+
+  '/nes/{neid}/maintenance/start':
+    post:
+      tags:
+        - adpNes      
+      description: 启动维护模式
+      produces:
+        - application/json
+      operationId: startNeMaintenance
+      parameters:
+        - name: neid
+          in: path
+          description: ID of NE that needs to be fetched
+          required: true
+          type: string
+      responses:
+        '200':
+          description: OK
+        '500':
+          description: Internal Error
+          schema:
+            $ref: '#/definitions/AdpErrorInfo'
+  '/nes/{neid}/maintenance/stop':
+    post:
+      tags:
+        - adpNes      
+      description: 退出维护模式
+      produces:
+        - application/json
+      operationId: stopNeMaintenance
+      parameters:
+        - name: neid
+          in: path
+          description: ID of NE that needs to be fetched
+          required: true
+          type: string
+      responses:
+        '200':
+          description: OK
+        '500':
+          description: Internal Error
+          schema:
+            $ref: '#/definitions/AdpErrorInfo'
+
+  '/nes/{neid}/alignment/start':
+    post:
+      tags:
+        - adpNes      
+      summary: '启动同步'
+      description: 开始同步网元
+      produces:
+        - application/json
+      operationId: startAlignment
+      parameters:
+        - name: neid
+          in: path
+          description: ID of NE that needs to be fetched
+          required: true
+          type: string
+      responses:
+        '200':
+          description: OK
+        '500':
+          description: Internal Error
+          schema:
+            $ref: '#/definitions/AdpErrorInfo'
+
+  '/nes/{neid}/RI':
+    get:
+      tags:
+        - adpNes      
+      summary: '同步RI信息'
+      description: '同步RI信息'
+      produces:
+        - application/json
+      operationId: getNeRIByID
+      parameters:
+        - name: neid
+          in: path
+          description: ID of NE that needs to be fetched
+          required: true
+          type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/AdpRIInfoList'
+        '500':
+          description: Internal Error
+          schema:
+            $ref: '#/definitions/AdpErrorInfo'
+
+            
+  '/nes/{neid}/tps':
+    get:
+      tags:
+        - adpTps      
+      summary: Get ports
+      description: Get the ports with queries
+      produces:
+        - application/json
+      operationId: getNeTps
+      parameters:
+        - name: neid
+          in: path
+          description: ID of NE that needs to be fetched
+          required: true
+          type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/AdpTp'
+        '500':
+          description: Internal Error
+          schema:
+            $ref: '#/definitions/AdpErrorInfo'
+    post:
+      tags:
+        - adpTps      
+      summary: Add TPs
+      description: Store new TPs to Database
+      produces:
+        - application/json
+      consumes:
+        - application/json
+      operationId: addTps
+      parameters:
+        - name: neid
+          in: path
+          description: ID of NE that needs to be fetched
+          required: true
+          type: string
+        - name: tps
+          in: body
+          description: TP objects that needs to be added
+          required: true
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/AdpTp'
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/AdpTp'
+        '405':
+          description: Invalid input
+        '500':
+          description: Internal Error
+          schema:
+            $ref: '#/definitions/AdpErrorInfo'
+  '/nes/{neid}/tps/{tpid}':
+    get:
+      tags:
+        - adpTps      
+      summary: Find TP by tpid
+      description: Returns a TP as per the tpid
+      produces:
+        - application/json
+      operationId: getTpById
+      parameters:
+        - name: neid
+          in: path
+          description: ID of NE that needs to be fetched
+          required: true
+          type: string
+        - name: tpid
+          in: path
+          description: ID of TP that needs to be fetched
+          required: true
+          type: string
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            $ref: '#/definitions/AdpTp'
+        '400':
+          description: Invalid tpid supplied
+        '404':
+          description: TP not found
+        '500':
+          description: Internal Error
+          schema:
+            $ref: '#/definitions/AdpErrorInfo'
+    put:
+      tags:
+        - adpTps      
+      summary: modify TP attributes by tpid
+      description: modify TP attributes
+      produces:
+        - application/json
+      operationId: modifyTpById
+      parameters:
+        - name: neid
+          in: path
+          description: ID of NE that needs to be fetched
+          required: true
+          type: string
+        - name: tpid
+          in: path
+          description: ID of TP that needs to be fetched
+          required: true
+          type: string
+        - name: data
+          in: body
+          description: list all required to modify attributes
+          required: true
+          schema:
+            $ref: '#/definitions/AdpKVPairList'
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            $ref: '#/definitions/AdpTp'
+        '400':
+          description: Invalid tpid supplied
+        '404':
+          description: TP not found
+        '500':
+          description: Internal Error
+          schema:
+            $ref: '#/definitions/AdpErrorInfo'            
+  '/nes/{neid}/tps/{tpid}/children':
+    get:
+      tags:
+        - adpTps      
+      summary: Find Children TPs by tpid
+      description: Returns Children TPs of tpid
+      produces:
+        - application/json
+      operationId: getChildrenTps
+      parameters:
+        - name: neid
+          in: path
+          description: ID of NE that needs to be fetched
+          required: true
+          type: string
+        - name: tpid
+          in: path
+          description: ID of TP that needs to be fetched
+          required: true
+          type: string
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/AdpTp'
+        '400':
+          description: Invalid tpid supplied
+        '404':
+          description: Children TP not found
+        '500':
+          description: Internal Error
+          schema:
+            $ref: '#/definitions/AdpErrorInfo'
+  '/nes/{neid}/tps/{ptpid}/ctps':
+    get:
+      tags:
+        - adpTps      
+      summary: Find all CTPs by PTP id
+      description: Find all CTPs by PTP id
+      produces:
+        - application/json
+      operationId: getAllCTPsOfPTP
+      parameters:
+        - name: neid
+          in: path
+          description: ID of NE that needs to be fetched
+          required: true
+          type: string
+        - name: ptpid
+          in: path
+          description: ID of PTP that all children CTPs need to be fetched
+          required: true
+          type: string
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/AdpTp'
+        '400':
+          description: Invalid ptpid supplied
+        '404':
+          description: Children CTPs not found
+        '500':
+          description: Internal Error
+          schema:
+            $ref: '#/definitions/AdpErrorInfo'          
+  '/nes/{neid}/tps/type/{tptype}':
+    get:
+      tags:
+        - adpTps      
+      summary: Get ports
+      description: Get the ports with queries
+      produces:
+        - application/json
+      operationId: getTpsByType
+      parameters:
+        - name: neid
+          in: path
+          description: ID of NE that needs to be fetched
+          required: true
+          type: string
+        - name: tptype
+          in: path
+          required: true
+          description: the TP type to query
+          type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/AdpTp'
+        '400':
+          description: Invalid tpid supplied
+        '404':
+          description: TP not found
+        '500':
+          description: Internal Error
+          schema:
+            $ref: '#/definitions/AdpErrorInfo'
+  '/nes/{neid}/tps/layer_rate/{layerrate}':
+    get:
+      tags:
+        - adpTps      
+      summary: Find TPs by layerrate
+      description: Returns TPs as per the layerrate
+      produces:
+        - application/json
+      operationId: getTpsByLayerRate
+      parameters:
+        - name: neid
+          in: path
+          description: ID of NE that needs to be fetched
+          required: true
+          type: string
+        - name: layerrate
+          in: path
+          description: Layer Rate of TPs
+          required: true
+          type: string
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/AdpTp'
+        '400':
+          description: Invalid Layer Rate supplied
+        '404':
+          description: TP not found
+        '500':
+          description: Internal Error
+          schema:
+            $ref: '#/definitions/AdpErrorInfo'
+
+  '/nes/{neid}/equipments/{eqid}':
+    get:
+      tags:
+        - adpEquipments
+      summary: Find equipments by equipmentid
+      description: Returns an equipment as per the eqid
+      produces:
+        - application/json
+      operationId: getEquipmentById
+      parameters:
+        - name: neid
+          in: path
+          description: ID of NE that needs to be fetched
+          required: true
+          type: string
+        - in: path
+          name: eqid
+          description: ID of Equipment that needs to be fetched
+          required: true
+          type: string
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            $ref: '#/definitions/AdpEquipment'
+        '400':
+          description: Invalid Equipment ID supplied
+        '404':
+          description: Equipment not found
+        '500':
+          description: Internal Error
+          schema:
+            $ref: '#/definitions/AdpErrorInfo'
+    put:
+      tags:
+        - adpEquipments      
+      summary: modify equipment attributes by equipmentId
+      description: modify equipment attributes
+      produces:
+        - application/json
+      operationId: modifyEquipmentById
+      parameters:
+        - name: neid
+          in: path
+          description: ID of NE that needs to be fetched
+          required: true
+          type: string
+        - name: eqid
+          in: path
+          description: ID of equipment that needs to be modified.
+          required: true
+          type: string
+        - name: data
+          in: body
+          description: list all required to modify attributes
+          required: true
+          schema:
+            $ref: '#/definitions/AdpKVPairList'
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            $ref: '#/definitions/AdpEquipment'
+        '400':
+          description: Invalid equipment id supplied
+        '404':
+          description: Equipment not found
+        '500':
+          description: Internal Error
+          schema:
+            $ref: '#/definitions/AdpErrorInfo' 
+          
+  '/nes/{neid}/equipments':
+    get:
+      tags:
+        - adpEquipments
+      summary: Find equipments that belong to NE with neid
+      description: Returns equipments as per the neid
+      produces:
+        - application/json
+      operationId: getEquipmentsByNeId
+      parameters:
+        - in: path
+          name: neid
+          description: Equipments of NE that need to be fetched
+          required: true
+          type: string
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/AdpEquipment'
+        '500':
+          description: Internal Error
+          schema:
+            $ref: '#/definitions/AdpErrorInfo'
+    post:
+      tags:
+        - adpEquipments      
+      summary: Add Equipment
+      description: Add a new Equipment
+      produces:
+        - application/json
+      consumes:
+        - application/json
+      operationId: addEquipment
+      parameters:
+        - in: path
+          name: neid
+          description: Equipments of NE that need to be fetched
+          required: true
+          type: string
+        - name: equipment
+          in: body
+          description: Equipment object that needs to be added
+          required: true
+          schema:
+            $ref: '#/definitions/AdpEquipment'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/AdpEquipment'
+        '500':
+          description: Internal Error
+          schema:
+            $ref: '#/definitions/AdpErrorInfo'
+          
+  '/nes/{neid}/xcs':
+    get:
+      tags:
+        - adpXcs
+      summary: Find XC by ID
+      description: Returns an XC as per the ID
+      produces:
+        - application/json
+      operationId: getXcsByNeId
+      parameters:
+        - in: path
+          name: neid
+          description: ID of NE that needs to be fetched
+          required: true
+          type: string
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/AdpXc'
+        '400':
+          description: Invalid ID supplied
+        '404':
+          description: XC not found
+        '500':
+          description: Internal Error
+          schema:
+            $ref: '#/definitions/AdpErrorInfo'
+    post:
+      tags:
+        - adpXcs
+      summary: Create XCs
+      description: create XC
+      produces:
+        - application/json
+      consumes:
+        - application/json
+      operationId: createXc
+      parameters:
+        - name: neid
+          in: path
+          description: ID of NE that needs to be fetched
+          required: true
+          type: string
+        - name: xc
+          in: body
+          description: XC object that needs to be created
+          required: true
+          schema:
+            $ref: '#/definitions/AdpXc'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/AdpXc'
+        '405':
+          description: Invalid input
+        '500':
+          description: Internal Error
+          schema:
+            $ref: '#/definitions/AdpErrorInfo'
+    delete:
+      tags:
+        - adpXcs
+      summary: Delete XC
+      description: This can only be done by the logged in user.
+      produces:
+        - application/json
+      operationId: deleteXcsByNeId
+      parameters:
+        - in: path
+          name: neid
+          description: The XC ID that needs to be deleted
+          required: true
+          type: string
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Invalid ID supplied
+        '404':
+          description: XC not found
+        '500':
+          description: Internal Error
+          schema:
+            $ref: '#/definitions/AdpErrorInfo'
+          
+  '/nes/{neid}/xcs/{xcid}':
+    get:
+      tags:
+        - adpXcs
+      summary: Find XC by ID
+      description: Returns an XC as per the ID
+      produces:
+        - application/json
+      operationId: getXcById
+      parameters:
+        - name: neid
+          in: path
+          description: ID of NE that needs to be fetched
+          required: true
+          type: string
+        - in: path
+          name: xcid
+          description: ID of XC that needs to be fetched
+          required: true
+          type: string
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            $ref: '#/definitions/AdpXc'
+        '400':
+          description: Invalid ID supplied
+        '404':
+          description: XC not found
+        '500':
+          description: Internal Error
+          schema:
+            $ref: '#/definitions/AdpErrorInfo'
+    put:
+      tags:
+        - adpXcs      
+      summary: Update XC by xcid
+      description: Returns XC after updated
+      produces:
+        - application/json
+      operationId: updateXcById
+      parameters:
+        - name: neid
+          in: path
+          description: ID of NE that needs to be update
+          required: true
+          type: string
+        - name: xcid
+          in: path
+          description: ID of XC that needs to be update
+          required: true
+          type: string
+        - name: data
+          in: body
+          description: TP attributes need to update
+          required: true
+          schema:
+            $ref: '#/definitions/AdpKVPairList'
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            $ref: '#/definitions/AdpXc'
+        '400':
+          description: Invalid xcid supplied
+        '404':
+          description: XC not found
+        '500':
+          description: Internal Error
+          schema:
+            $ref: '#/definitions/AdpErrorInfo'            
+    delete:
+      tags:
+        - adpXcs
+      summary: Delete XC
+      description: This can only be done by the logged in user.
+      produces:
+        - application/json
+      operationId: deleteXc
+      parameters:
+        - name: neid
+          in: path
+          description: ID of NE that needs to be fetched
+          required: true
+          type: string
+        - in: path
+          name: xcid
+          description: The XC ID that needs to be deleted
+          required: true
+          type: string
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Invalid ID supplied
+        '404':
+          description: XC not found
+        '500':
+          description: Internal Error
+          schema:
+            $ref: '#/definitions/AdpErrorInfo'
+            
+  '/nes/{neid}/xcs/endtpid/{tpid}':
+    get:
+      tags:
+        - adpXcs
+      summary: Find XC by tp ID
+      description: Returns an XC as per the aEnd/zEnd tpID
+      produces:
+        - application/json
+      operationId: getXcByEndTpId
+      parameters:
+        - name: neid
+          in: path
+          description: ID of NE that needs to be fetched
+          required: true
+          type: string
+        - name: tpid
+          in: path
+          description: ID of TP which is A/Z end of returned XC.
+          required: true
+          type: string
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            $ref: '#/definitions/AdpXc'
+        '400':
+          description: Invalid ID supplied
+        '404':
+          description: XC not found
+        '500':
+          description: Internal Error
+          schema:
+            $ref: '#/definitions/AdpErrorInfo'
+    
+  '/nes/{neid}/xcs/ptp/{ptpid}':
+    get:
+      tags:
+        - adpXcs
+      summary: Find XCs by ptp ID
+      description: Returns XCs which aEnd/zEnd tp belongs to the given PTP.
+      produces:
+        - application/json
+      operationId: getXcsByPTPId
+      parameters:
+        - name: neid
+          in: path
+          description: ID of NE that needs to be fetched
+          required: true
+          type: string
+        - name: ptpid
+          in: path
+          description: ID of PTP which contains A/Z end of returned XC.
+          required: true
+          type: string 
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/AdpXc'
+        '400':
+          description: Invalid ID supplied
+        '404':
+          description: XC not found
+        '500':
+          description: Internal Error
+          schema:
+            $ref: '#/definitions/AdpErrorInfo'
+
+  '/nes/{neid}/xcs/board/{equipmentid}':
+    get:
+      tags:
+        - adpXcs
+      summary: Find XCs by board ID
+      description: Returns XCs which aEnd/zEnd tp belongs to the given board.
+      produces:
+        - application/json
+      operationId: getXcsByBoardId
+      parameters:
+        - name: neid
+          in: path
+          description: ID of NE that needs to be fetched
+          required: true
+          type: string
+        - name: equipmentid
+          in: path
+          description: ID of board which contains A/Z end of returned XC.
+          required: true
+          type: string 
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/AdpXc'
+        '400':
+          description: Invalid ID supplied
+        '404':
+          description: XC not found
+        '500':
+          description: Internal Error
+          schema:
+            $ref: '#/definitions/AdpErrorInfo'
+
+  '/nes/{neid}/xcs/crossboard':
+    get:
+      tags:
+        - adpXcs
+      summary: Find cross-board XCs by ne ID
+      description: Returns cross-board XCs in given NE.
+      produces:
+        - application/json
+      operationId: getCrossBoardXcs
+      parameters:
+        - name: neid
+          in: path
+          description: ID of NE that needs to be fetched
+          required: true
+          type: string
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/AdpXc'
+        '400':
+          description: Invalid ID supplied
+        '404':
+          description: XC not found
+        '500':
+          description: Internal Error
+          schema:
+            $ref: '#/definitions/AdpErrorInfo'
+
+            
+#  '/xcs/tpid/{tpid}':
+#    get:
+#      tags:
+#        - adpXcs
+#      summary: Query XCs of TP
+#      description: get XCs under TP
+#      produces:
+#        - application/json
+#      operationId: findXcs
+#      parameters:
+#        - name: tpid
+#          in: path
+#          type: string
+#          required: true
+#          description: TP ID to query
+#      responses:
+#        '200':
+#          description: OK
+#          schema:
+#            type: array
+#            items:
+#              $ref: '#/definitions/AdpXc'
+#        '400':
+#          description: Invalid ID supplied
+#        '404':
+#          description: XC not found
+#        '500':
+#          description: Internal Error
+#          schema:
+#            $ref: '#/definitions/AdpErrorInfo'
+        
+          
+  # /terminations/{ctpid}:
+  #   get:
+  #     tags:
+  #       - adpTps
+  #     summary: Terminate CTP
+  #     description: 'Terminate CTP to sub-CTPs, currently only support 2M'
+  #     produces:
+  #       - application/json
+  #     operationId: terminateCtp
+  #     parameters:
+  #       - name: ctpid
+  #         in: path
+  #         type: string
+  #         required: true
+  #         description: CTP ID to terminate
+  #     responses:
+  #       '200':
+  #         description: OK
+  #         schema:
+  #           type: array
+  #           items:
+  #             $ref: '#/definitions/AdpTp'
+  #       '304':
+  #         description: CTP terminate failed.
+  #       '400':
+  #         description: Invalid CTP ID supplied
+  #       '404':
+  #         description: CTP not found
+  #       '500':
+  #         description: Internal Error
+  #         schema:
+  #           $ref: '#/definitions/AdpErrorInfo'
+          
+  '/nes/{neid}/pgs':
+    get:
+      tags:
+        - adpPgs
+      summary: retrieve All PG under NE
+      description: retrieve All PG under NE
+      produces:
+        - application/json
+      operationId: getPgsByNeId
+      parameters:
+        - in: path
+          name: neid
+          description: ID of NE that needs to be fetched
+          required: true
+          type: string
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/AdpPg'
+        '400':
+          description: Invalid ID supplied
+        '404':
+          description: PG not found
+        '500':
+          description: Internal Error
+          schema:
+            $ref: '#/definitions/AdpErrorInfo'
+    post:
+      tags:
+        - adpPgs
+      summary: Create PG
+      description: create PG when pg.rate include WDM and pg.type=Y-cable
+      produces:
+        - application/json
+      consumes:
+        - application/json
+      operationId: createPg
+      parameters:
+        - name: neid
+          in: path
+          description: ID of NE that needs to be fetched
+          required: true
+          type: string
+        - name: pg
+          in: body
+          description: PG object that needs to be created
+          required: true
+          schema:
+            $ref: '#/definitions/AdpPg'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/AdpPg'
+        '405':
+          description: Invalid input
+        '500':
+          description: Internal Error
+          schema:
+            $ref: '#/definitions/AdpErrorInfo'
+            
+  '/nes/{neid}/pgs/{pgid}':
+    get:
+      tags:
+        - adpPgs
+      summary: Find PG by ID
+      description: Returns an PG with special ID
+      produces:
+        - application/json
+      operationId: getPgById
+      parameters:
+        - name: neid
+          in: path
+          description: ID of NE that needs to be fetched
+          required: true
+          type: string
+        - in: path
+          name: pgid
+          description: ID of PG that needs to be fetched
+          required: true
+          type: string
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            $ref: '#/definitions/AdpPg'
+        '400':
+          description: Invalid ID supplied
+        '404':
+          description: PG not found
+        '500':
+          description: Internal Error
+          schema:
+            $ref: '#/definitions/AdpErrorInfo'
+    put:
+      tags:
+        - adpPgs      
+      summary: Update PG by pgid
+      description: update PG attributes, support switchReason, holdOfftime/wtr (when initial value isn't -1)
+      produces:
+        - application/json
+      operationId: updatePgById
+      parameters:
+        - name: neid
+          in: path
+          description: ID of NE that needs to be update
+          required: true
+          type: string
+        - name: pgid
+          in: path
+          description: ID of PG that needs to be update
+          required: true
+          type: string
+        - name: data
+          in: body
+          description: TP attributes need to update
+          required: true
+          schema:
+            $ref: '#/definitions/AdpKVPairList'
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            $ref: '#/definitions/AdpPg'
+        '400':
+          description: Invalid pgid supplied
+        '404':
+          description: PG not found
+        '500':
+          description: Internal Error
+          schema:
+            $ref: '#/definitions/AdpErrorInfo'            
+    delete:
+      tags:
+        - adpPgs
+      summary: Delete PG
+      description: This can can be done when pg.rate include WDM and pg.type=Y-cable.
+      produces:
+        - application/json
+      operationId: deletePg
+      parameters:
+        - name: neid
+          in: path
+          description: ID of NE that needs to be fetched
+          required: true
+          type: string
+        - in: path
+          name: pgid
+          description: The PG ID that needs to be deleted
+          required: true
+          type: string
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Invalid ID supplied
+        '404':
+          description: PG not found
+        '500':
+          description: Internal Error
+          schema:
+            $ref: '#/definitions/AdpErrorInfo'
+                        
+  '/enms/statuses/ping':
+    get:
+      tags:
+        - adpSystem
+      summary: Heart Beat
+      description: ENMS heart beat, to check the system health status
+      produces:
+        - application/json
+      operationId: ping
+      responses:
+        '200':
+          description: OK
+        '500':
+          description: Internal Error
+          schema:
+            $ref: '#/definitions/AdpErrorInfo'
+          
+definitions:
+      
+  AdpNe:
+    type: object
+    description: the NE model for Adapter
+    properties:
+      id:
+        type: string
+        description: 'NE数据库ID,该ID由Controller提供两者需保持一致'
+      neType:
+        type: string
+      actualNeRelease:
+        type: string
+        description: '实际的网元版本号'
+      neRelease:
+        type: string
+        description: '网元版本号，例如 4.5'
+      userLabel:
+        type: string
+      nativeName:
+        type: string
+        description: "在网元MIB中保存的名称"
+      addresses:
+        $ref: "#/definitions/AdpAddresses"
+      alarmState:
+        type: string
+        description: '(enum)0:cleared 1:indicator 2:warning 3:minor 4:major 5:critical'
+      lacState:
+        type: string
+        description: '(enum) 0:granted 1:denied 2:partial'
+      operationalState:
+        type: string
+        description: '(enum) NE的操作状态 0:idle 1:disable 2:<do>ing 3:unknow'
+      supervisionState:
+        type: string
+        description: '(enum)  0:supervised 1:noSupervised 2:partial'
+      maintenanceState:
+        type: string
+        description: '(enum) 网元是否处于维护期间，=True时，网管不处理此网元的告警信息. 0:true 1:false 2:partial'
+      alignmentState:
+        type: string
+        description: '(enum)Adapter与网元数据是否一致 0:aligned 1:misaligned 2:partial'
+      communicationState:
+        type: string
+        description: '(enum)反映Adapter与网元通信的实际情况.0:connected 1:disconnected 2:partial'
+      params:
+        type: array
+        items:
+          $ref: '#/definitions/AdpKVPair'
+      loginInfo:    
+        type: array
+        description: "TL1，CLI网元包含的key有usr,passwd。SNMP网元包含的可以有getCommunity, setCommunity, version(v2, v3)， 版本为V3时key还有usr, level"
+        items:
+          $ref: '#/definitions/AdpKVPair'
+      ntpServerList:
+        type: array
+        description: '网元上配置的ntpServer列表， Q3 NTP地址是Q3格式，其他为IP格式。可支持主备地址'
+        items:
+          type: string
+#      ntpServerReachability:
+#        type: integer
+#        description: '(enum)反映各个NE ntpServer的可达性 0:reachable 1:unreachable'
+#      supportedTech:
+#        type: string
+#        description: 'PDH/SDH/ETH/WDM/IP 几种技术的组合，以逗号为分割.'
+#      creationTime:
+#        type: integer
+#        format: int64
+#        description: '网元创建时间.'
+      comments:
+        type: string
+
+  AdpTp:
+    type: object
+    description: '可包含PTP,CTP,FTP'
+    properties:
+      id:
+        type: string
+        description: '数据库ID'
+      neId:
+        type: string
+        description: 'NE ID'
+      userLabel:
+        type: string
+        example: '按照rack/shelf/slot/port的方式命名'
+      nativeName:
+        type: string
+        description: "在网元ZIC/USM的名称"
+      layerRates:
+        type: array
+        description: '此PTP支持的层速率列表'
+        items:
+          type: string
+      implementState:
+        type: string
+        description: '=implemented 时，NE TP 处于outOfService状态，=inService时，NE TP处于inService状态'         
+      moType:
+        type: string
+        description: '(enum) Managed Object Type'
+      keyOnNe:
+        type: string
+        description: 'takeOver操作时通过此属性判别新/老资源'
+      direction:
+        type: string
+        description: 'BI, Rx, Tx'
+      freeResources:  
+        type: array
+        description: '不同layerRate的PTP，提供的值不一样。其取值需要根据实际情况变化。如STM16的物理端口，-	没有承载任何业务时，freeResource=au64C=0, au16C=0, au4C=4, au4=16, tu3=16×3, tu12=63×16'
+        items:
+          $ref: '#/definitions/AdpKVPair'
+#      techDomain:
+#        type: integer
+#        description: (enum)0:virtual 1:SDH 2:ETH 2:WDM 3:LAG 4:lagMember.上报TP列表到GUI时，techDomain=virtual/lagMember的不上报。
+      tpType:
+        type: string
+        description: '(enum)0:PTP 1:CTP 2:FTP 3:LAG 4:lagMember.上报TP列表到GUI时，只输出PTP/LAG口。输出PTP/LAG口。'
+      tpRole:
+        type: array
+        description: "tpRole[0]: Current, Potential. tpRole[1]: Virtual, Real. tpRole[1] 可以不存在"
+        items:
+          type: string
+      primaryLayerRate:
+        type: string
+        description: "其主要作用的layerRate，与objectType类似"
+#      moduleType: -> moved to params
+#        type: string
+#        description: '如E1/3/4, STMn, FE, GE, 10GE, 100GE, OTS, OS'
+      alarmState:
+        type: string
+        description: '(enum)0:cleared 1:indicator 2:warning 3:minor 4:major 5:critical'
+      adminState:
+        type: string
+        description: '(enum) Up, Down'
+      ptpID:
+        type: string
+        description: '如果此TP是CTP，此值表明是那个PTP的CTP.'
+      parentTpID:
+        type: string
+        description: '该TP的父TP'
+#      objectType:
+#        type: string
+#        description: ''
+      params:
+        type: array
+        description: '键值对，如IP Port的macAddress, ipAddress等。'
+        items:
+          $ref: '#/definitions/AdpKVPair'
+#      memberTPs: ->moved to params
+#        type: array
+#        description: '针对LAG，指出构成LAG的PTP ID, ID列表.'
+#        items:
+#          type: integer
+
+  AdpEquipment:
+    type: object
+    description: '主要保存的是equipmentHolder信息，如果此holder加载了具体的板卡/模块信息，actualType有值。如果expectedType和actualType都是空表明此position上没有插盘。当acutalType非空时，params中包含：unitPartNumber， softwarePartNumber， serialNumber'
+    properties:
+      id:
+        type: string
+        description: '数据库ID.'
+      neId:
+        type: string
+      position:
+        type: string
+        description: '编码格式为rack/shelf/slot/subSlot，rack，shelf必须有值.'
+      userLabel:
+        type: string
+      nativeName:
+        type: string
+      type:
+        type: string
+        description: '(enum)表明此记录描述的是什么内容,0:slot 1: subslot 2:board'
+      expectedType:
+        type: string
+        description: '网元MIB中的值.'
+      actualType:
+        type: string
+        description: '网元实际插的盘.'
+      keyOnNe:
+        type: string
+        description: 'takeOver操作时通过此属性判别新/老资源.'
+      params:
+        type: array
+        description: '附加属性，地址信息也放入这里'
+        items:
+          $ref: '#/definitions/AdpKVPair'
+
+  AdpXc:
+    type: object
+    description: the XC model for Adapter
+    properties:
+      id:
+        type: string
+      neId:
+        type: string
+      keyOnNe:
+        type: string
+      type:
+        type: string
+        description: '(enum)0:simple 1:sncp 2:leg 3:hub 4:spoke'
+      userLabel:
+        type: string
+      nativeName:
+        type: string
+      layerRates:
+        type: array
+        description: '此PTP支持的层速率列表'
+        items:
+          type: string
+      direction:
+        type: string
+        description: '(enum) 0-uni 1-bi'
+      xcRole:
+        type: string
+        description: "(enum)0:flexiable, 1:fixed, 2:potential Flexiable/fixed 都是当前存在的交叉"
+      aendPoints:
+        type: array
+        description: 'TP ID list记录XC的A端点'
+        items:
+          type: string
+#          $ref: '#/definitions/RefAdpTP'
+      zendPoints:
+        type: array
+        description: 'TP ID list记录XC的Z端点'
+        items:
+          type: string
+#          $ref: '#/definitions/TP'
+      params:
+        type: array
+        items:
+          $ref: '#/definitions/AdpKVPair'
+      atpTimeslots:
+        type: array
+        description: the list of aTP's timeslots
+        items:
+          type: string
+          description: '0x---xxabc xx 8bits for AU4 no.  abc 12bits for vc12 timeslot'
+      ztpTimeslots:
+        type: array
+        description: the list of zTP's timeslots
+        items:
+          type: string
+          description: '0x---xxabc xx 8bits for AU4 no.  abc 12bits for vc12 timeslot'
+
+  AdpPg:
+    type: object
+    description: the PG model for Adapter
+    properties:
+      id:
+        type: string
+      neId:
+        type: string
+      keyOnNe:
+        type: string
+      type:
+        type: string
+        description: '(enum)0: 1+1  1: N:1 2:2F-Ring 3:SNCP 4:Y-Cable'
+      userLabel:
+        type: string
+      nativeName:
+        type: string
+      layerRates:
+        type: array
+        description: '此PTP支持的层速率列表'
+        items:
+          type: string
+      direction:
+        type: string
+        description: '(enum) 0-uni 1-bi'
+      reversionMode:
+        type: string
+        description: '(enum)0:unknow 1:revertive 2:nonRevertive'
+      wtrTime:
+        type: string
+      holdOffTime:
+        type: string       
+      protectionState:
+        type: string      
+        description: '(enum)0:manualSwitched 1:autoSwitched 2:normal'
+      switchReason:
+        type: string      
+        description: '0:normal, 1:automatical 2:lockout, 3:force, 4:manual, 5:exercise, 10:lockoutWest, 11:forceWest, 12:manualWest, 13:exerciseWest, 14:lockoutEast, 15:forceEast, 16:manualEast, 17:exerciseEast'
+      workingPort:  
+        type: string      
+        description: 'TP identify under this NE'
+      tpIDs:
+        type: array
+        description: 'members in protection group, mainTP在前，spareTP在后，westTP在前，eastTP在后'
+        items:
+          type: string
+      params:
+        type: array
+        items:
+          $ref: '#/definitions/AdpKVPair'
+          
+  AdpAddresses:
+    type: object
+    description: 'The Addresses of NE, Equipment'
+    properties:
+      q3Address:
+        $ref: '#/definitions/AdpQ3Address'
+      tl1Address:
+        type: array
+        items:
+          type: string
+      snmpAddress:
+        $ref: '#/definitions/AdpSnmpAddress'
+  AdpSnmpAddress:
+    type: object
+    properties:
+      snmpAgent:
+        type: string
+      snmpTraps:
+        type: array
+        items:
+          type: string
+  AdpQ3Address:
+    type: object
+    properties:
+      address:
+        type: string
+      osMain:
+        type: string
+      osSpare:
+        type: string
+
+  AdpErrorInfo:
+    type: object
+    properties:
+      code:
+        type: string
+      message:
+        type: string
+        example: NE %s creation error
+
+  AdpKVPair:
+    type: object
+    description: '键值对,用于灵活保存各种需要键值对的情况，例如：动态参数列表'
+    properties:
+      key: 
+        type: string
+      value: 
+        type: string
+        
+  AdpKVPairList:
+    type: object
+    properties:
+      data:
+        type: array
+        items:
+          $ref: "#/definitions/AdpKVPair"
+     
+  AdpRIInfo:
+    type: object
+    properties:
+      id:
+        type: string
+        description: '数据库ID'
+      neId:
+        type: string
+        description: 'NE ID'    
+      riType:
+        type: string  
+        description: '(enum)0:rack 1:shelf 2:card 3:module'
+      objID:
+        type: string 
+        description: '相对于objType的ID（由于rack/shelf/card 在同一张表，对应的ID就是表内ID，module是PTP在TP表中的ID）'
+      CLEI:
+        type: string
+      companyID:
+        type: string  
+      date:
+        type: string         
+      extraData:
+        type: string
+      factoryID:
+        type: string  
+      manufacturingPartNumber:
+        type: string 
+      mnemonic:
+        type: string
+      serialNumber:
+        type: string  
+      swPartNumber:
+        type: string         
+      params:
+        type: array
+        items:
+          $ref: '#/definitions/AdpKVPair'     
+          
+  AdpRIInfoList:
+    type: object
+    properties:
+      data:
+        type: array
+        items:
+          $ref: "#/definitions/AdpRIInfo"           
+          
