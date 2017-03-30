@@ -1,6 +1,6 @@
 package com.mfe.qnmgr;
 
-import com.mfe.qnmgr.apiImpls.BucketsApiServiceImpl;
+import com.mfe.qnmgr.api.FilesApiServiceImpl;
 import com.mfe.qnmgr.constants.ConfigKey;
 import com.mfe.qnmgr.exception.QnMgrException;
 import com.mfe.qnmgr.utils.ClassThief;
@@ -15,7 +15,7 @@ import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.servlet.ServletContainer;
 
 /**
- * Created by junyuel on 2017/3/30.
+ * Created by chenmin on 2017/3/30.
  */
 public class Main {
     private static Logger log;
@@ -90,8 +90,8 @@ public class Main {
 
     private static void registerQnmgrServerImpl() {
         try {
-            ClassThief.setFinalStatic("com.mfe.qnmgr.restful.qnmgrserver.api.factories.BucketsApiServiceFactory",
-                    "service", new BucketsApiServiceImpl());
+            ClassThief.setFinalStatic("com.mfe.qnmgr.restful.qnmgrserver.api.factories.FilesApiServiceFactory",
+                    "service", new FilesApiServiceImpl());
         } catch (Exception e) {
             log.error("registerQnmgrServerImpl", e);
             shutDown();

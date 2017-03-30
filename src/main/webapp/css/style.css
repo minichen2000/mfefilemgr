@@ -1,0 +1,77 @@
+/* Empty. Add your own CSS if you like */
+body{
+  font-family: Microsoft YaHei,'宋体' , Lucida Console, Tahoma, Helvetica, Arial, "\5b8b\4f53", sans-serif;
+}
+
+.text-center{
+  text-align:center;
+}
+.text-right{
+  text-align:right;
+}
+.text-left{
+  text-align:left;
+}
+
+.tab-content-cmd-title-style{
+  color:#222222;
+  font-size: 28px;
+  margin-top:10px;
+  margin-bottom:10px;
+}
+
+.tab-content-single-name-style{
+  color:#222222;
+  font-weight: bold;
+}
+.tab-content-row-style{
+  padding: 10px 8px 4px 0px
+}
+.tab-content-single-value-style{
+  margin-left:20px;
+}
+
+.tab-content-json-value-style{
+  margin:8px 0px 12px 0px;
+  padding: 10px;
+}
+.pre-copy-bt-postion{
+  position: absolute;
+  right:20px;
+  top:20px;
+}
+.pre-accordion-bt-postion{
+  position: absolute;
+  right:60px;
+  top:20px;
+}
+.pre-size-normal{
+  height:auto;
+  border: 1px dashed rgba(51, 122, 181, 0.6);
+  border-radius: 0px;
+  background-color:#fafafa;
+  border: 1px dashed #337ab7;
+  color: #337ab7;
+  /*#337ab7*/
+}
+.pre-size-accordion{
+  height:70px;
+  border: 1px dashed rgba(51, 122, 181, 0.4);
+  color: #337ab7;
+  border-radius: 0px;
+  overflow-y: hidden;
+  background-color:#ffffff;
+}
+
+.tab-content-secondary-area-style{
+  margin:4px 0px 10px 40px
+}
+
+.customized-tips-style{
+
+  padding: 2px 4px;
+  font-size: 90%;
+  color: #c7254e;
+  background-color: #f9f2f4;
+  border-radius: 4px;
+}

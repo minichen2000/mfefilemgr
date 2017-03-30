@@ -1,0 +1,66 @@
+<div style="margin:10px 10px 10px 10px">
+    <div class="row">
+        <div class="form-horizontal col-sm-12" role="form">
+            <div class="form-group">
+                <label class="col-sm-1 control-label" style="text-align:left">AccessKey</label>
+                <div class="col-sm-4">
+                    <input type="text" class="form-control" ng-model="accessKey"
+                           placeholder="AccessKey">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-1 control-label" style="text-align:left">SecretKey</label>
+                <div class="col-sm-4">
+                    <input type="password" class="form-control" ng-model="secretKey"
+                           placeholder="SecretKey">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-1 control-label" style="text-align:left">BucketName</label>
+                <div class="col-sm-4">
+                    <input type="text" class="form-control" ng-model="bucketName"
+                           placeholder="BucketName">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-1 control-label" style="text-align:left">DomainUrl</label>
+                <div class="col-sm-4">
+                    <input type="text" class="form-control" ng-model="domainUrl"
+                           placeholder="DomainUrl">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-1 control-label" style="text-align:left">Directory</label>
+                <div class="col-sm-4">
+                    <input type="text" class="form-control" ng-model="directory"
+                           placeholder="Directory">
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div class="row">
+        <div class="form-horizontal col-sm-12" role="form">
+            <div class="form-group" id="container">
+                <div class="col-sm-5">
+                    <lable class="btn btn-default btn-lg" id="pickfiles" href="#"
+                           style="font-size: 20px; padding:30px 74px 30px 74px;width:100%">
+                        <i class="glyphicon glyphicon-plus fa-align-center"></i>
+                        <span>点击选择文件</span>
+                        <span>或拖动来此</span>
+                        <span>支持多选哦</span>
+                    </lable>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div ng-if="0!=fileEntities.length">
+        <a class="btn btn-default btn-sm" href="#" ng-click="onClear()">
+            <span>清除</span>
+        </a>
+    </div>
+    <qn-upload-file-status ng-repeat="fileEntity in fileEntities"
+                    file-entity="fileEntity">
+    </qn-upload-file-status>
+</div>

@@ -1,0 +1,13 @@
+{
+  "name": "qnMgr",
+  "private": "true",
+  "devDependencies": {
+    "crypto-js": "",
+    "bootstrap": "3.3.6",
+    "font-awesome": "4.6.1",
+    "angular": "1.5.5",
+    "jquery": "~2.2.3",
+    "angular-bootstrap": "1.3.3",
+    "qiniu": ""
+  }
+}

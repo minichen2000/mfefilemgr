@@ -8,69 +8,124 @@ schemes:
   - http
   - https
 paths:
-  '/buckets':
+  '/files/{zone}/{bucket}':
     get:
       tags:
-        - Buckets
-      summary: Get all Buckets
-      description: Get all Buckets
+        - Files
+      summary: Get all files in a bucket
+      description: Get all files in a bucket
       produces:
         - application/json
-      operationId: getAllBuckets  
-      responses:
-        '200':
-          description: OK
-          schema:
-            type: array
-            items:
-              $ref: '#/definitions/Bucket'
-        '500':
-          description: Internal Error
-          schema:
-            $ref: '#/definitions/QnmgrErrorInfo'
-   
-          
-  '/buckets/{bucketname}':
-    get:
-      tags:
-        - Buckets
-      summary: Get bucket by name
-      description: Get bucket by name
-      produces:
-        - application/json
-      operationId: getBucketByName
+      operationId: getAllFiles
       parameters:
-        - in: path
-          name: bucketname
-          description: Name of bucket that needs to be fetched
+        - name: zone
+          in: path
+          description: "华东:zone0, 华北:zone1, 华南:zone2, 北美:zoneNa0"
+          required: true
+          type: string
+          enum:
+            - zone0
+            - zone1
+            - zone2
+            - zoneNa0
+        - name: bucket
+          in: path
+          description: bucket name
           required: true
           type: string
       responses:
         '200':
           description: successful operation
           schema:
-            $ref: '#/definitions/Bucket'
-        '400':
-          description: Invalid Name supplied
+            type: array
+            items:
+              $ref: '#/definitions/QnFile'
         '404':
           description: Bucket not found
         '500':
           description: Internal Error
           schema:
             $ref: '#/definitions/QnmgrErrorInfo'
-    
-          
+
+  '/files/{zone}/{bucket}/{directory}':
+    get:
+      tags:
+        - Files
+      summary: List all files and sub directories in a directory (one level)
+      description: List all files and sub directories in a directory (one level)
+      produces:
+        - application/json
+      operationId: listDir
+      parameters:
+        - name: zone
+          in: path
+          description: "华东:zone0, 华北:zone1, 华南:zone2, 北美:zoneNa0"
+          required: true
+          type: string
+          enum:
+            - zone0
+            - zone1
+            - zone2
+            - zoneNa0
+        - name: bucket
+          in: path
+          description: bucket name
+          required: true
+          type: string
+        - name: directory
+          in: path
+          description: "directory: have to be '<dir>/[<dir>/]..."
+          required: true
+          type: string
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            $ref: '#/definitions/QnDirInfo'
+        '404':
+          description: Bucket not found
+        '500':
+          description: Internal Error
+          schema:
+            $ref: '#/definitions/QnmgrErrorInfo'
+
 definitions:
-  Bucket:
+  QnFile:
     type: object
-    description: the qn Bucket model
+    description: the qn FileInfo model
     properties:
-      name:
+      key:
         type: string
-        description: 'name'
-      location:
+        description: 'key'
+      fsize:
+        type: integer
+        format: int64
+        description: 'file size in bytes'
+      mimeType:
         type: string
-        
+      putTime:
+        type: integer
+        format: int64
+      endUser:
+        type: string
+      hash:
+        type: string
+
+  QnDirInfo:
+    type: object
+    description: "directory info: including files and sub dirs."
+    properties:
+      files:
+        type: array
+        description: files in this directory.
+        items:
+          $ref: '#/definitions/QnFile'
+      subdirs:
+        type: array
+        description: subdirs in this directory.
+        items:
+          type: string
+
   QnmgrErrorInfo:
     type: object
     properties:

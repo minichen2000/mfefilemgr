@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>RestClient</title>
+
+    <link rel="icon" type="image/png" href="restclient.png" sizes="32x32"/>
+    <link href="css/style.css" rel="stylesheet">
+    <link href="bower_components/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+    <link href="bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <script src="bower_components/crypto-js/crypto-js.js"></script>
+    <script src="bower_components/jquery/dist/jquery.min.js"></script>
+    <script src="bower_components/angular/angular.min.js"></script>
+    <script src="bower_components/plupload/js/plupload.full.min.js"></script>
+    <script src="bower_components/qiniu/dist/qiniu.js"></script>
+
+    <script src="js/scripts/hashmap.js"></script>
+    <script src="js/app.js?t=1"></script>
+    <script src="js/services/logger.service.js?t=1"></script>
+    <script src="js/services/common-util.service.js?t=1"></script>
+    <script src="js/services/qn-util.service.js?t=1"></script>
+    <script src="js/main/uploader-main-controller.js?t=1"></script>
+    <script src="js/directives/qn-upload-file-status.directive.js?t=1"></script>
+    <script src="js/directives/qn-uploader.directive.js?t=1"></script>
+</head>
+
+<body ng-app="starter" ng-controller="UploaderMainController as vm">
+<qn-uploader access-key="vm.accessKey"
+             secret-key="vm.secretKey"
+             bucket-name="vm.bucketName"
+             domain-url="vm.domainUrl"
+             directory="vm.directory">
+</qn-uploader>
+
+
+</body>
+
+</html>
