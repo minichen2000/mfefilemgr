@@ -9,11 +9,21 @@ import com.mfe.qnmgr.restful.model.qnmgr.QnFile;
 import com.mfe.qnmgr.restful.model.qnmgr.QnmgrErrorInfo;
 import com.qiniu.common.QiniuException;
 import com.qiniu.common.Zone;
+import com.qiniu.http.Client;
 import com.qiniu.storage.BucketManager;
 import com.qiniu.storage.model.FileInfo;
 import com.qiniu.storage.model.FileListing;
+import okhttp3.MediaType;
+import okhttp3.Protocol;
+import okhttp3.ResponseBody;
+import okio.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import javax.ws.rs.core.Response;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.Charset;
 
 /**
  * Created by minichen on 2017/3/30.
@@ -56,11 +66,20 @@ public class Utils {
         return rlt;
     }
 
+    static public QnMgrException buildQnMgrExceptionFileNotFound(){
+        return new QnMgrException(612, "no such file or directory");
+    }
+
+
     static public QnMgrException toQnMgrException(Exception e){
         if(null==e) return null;
+        //log.debug("toQnMgrException: \n"+e.toString());
         if(e instanceof QiniuException){
             QiniuException qe=(QiniuException)e;
-            return new QnMgrException(qe.code(), qe.getLocalizedMessage()+", "+qe.error());
+            //return new QnMgrException(qe.code(), qe.getLocalizedMessage()+", "+qe.error()+(null==qe.response ? "" : "resp code: "+qe.response.statusCode+", resp error: "+qe.response.error));
+            return new QnMgrException(qe.code(), qe.error());
+        }else if(e instanceof QnMgrException){
+            return (QnMgrException)e;
         }else{
             return new QnMgrException(-1, e.getLocalizedMessage());
         }
@@ -68,51 +87,38 @@ public class Utils {
 
     static public QnmgrErrorInfo toQnmgrErrorInfo(Exception e){
         if(null==e) return null;
+        //log.debug("toQnmgrErrorInfo: \n"+e.toString());
         QnmgrErrorInfo rlt=new QnmgrErrorInfo();
-        if(e instanceof QnMgrException){
-            QnMgrException qe=(QnMgrException)e;
-            rlt.setCode(""+qe.errorCode);
-            rlt.setMessage(qe.errorReason_);
-        }else{
-            rlt.setCode(""+(-1));
-            rlt.setMessage(e.getLocalizedMessage());
-        }
+        QnMgrException qne=toQnMgrException(e);
+        rlt.setCode(""+qne.errorCode);
+        rlt.setMessage(qne.errorReason_);
         return rlt;
     }
 
-    static public QnDirInfo getDirInfo(BucketManager mgr, String bucket, String prefix, int limit, String delimiter) throws QnMgrException {
-        String marker = null;
-        FileListing f=null;
-        QnDirInfo rlt=new QnDirInfo();
-        for(;;){
-            try {
-                f = mgr.listFiles(bucket, prefix, marker, limit, delimiter);
-                if(null==f){
-                    return rlt;
-                }
-                marker = f.marker == null ? "" : f.marker;
-                if(null!=f.items){
-                    for (FileInfo item : f.items) {
-                        rlt.addFilesItem(Utils.toQnFile(item));
-                    }
-                }
-                if(null!=f.commonPrefixes){
-                    //rlt.getSubdirs().clear();
-                    for (String item : f.commonPrefixes) {
-                        rlt.addSubdirsItem(item);
-                    }
-                }
-                if("".equals(marker)){
-                    return rlt;
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-                QnMgrException ee=toQnMgrException(e);
-                if(null!=ee){
-                    throw ee;
-                }
-            }
+    static public Response rsErrorResponse(Exception e){
+        e.printStackTrace();
+        QnmgrErrorInfo errorInfo=Utils.toQnmgrErrorInfo(e);
+        switch(Integer.parseInt(errorInfo.getCode())){
+            case 612:
+                return Response.status(Response.Status.NOT_FOUND).entity(errorInfo).build();
+            default:
+                return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(errorInfo).build();
         }
-
     }
+
+    static public String trimForwardSlash(String dir){
+        if(dir.startsWith("/")){
+            dir=dir.substring(1);
+        }
+        if(dir.endsWith("/")){
+            dir=dir.substring(0, dir.length()-1);
+        }
+        if(dir.startsWith("/") || dir.endsWith("/")){
+            return trimForwardSlash(dir);
+        }else{
+            return dir;
+        }
+    }
+
+
 }

@@ -8,15 +8,15 @@ schemes:
   - http
   - https
 paths:
-  '/files/{zone}/{bucket}':
+  '/file/{zone}/{bucket}':
     get:
       tags:
-        - Files
+        - File
       summary: Get all files in a bucket
       description: Get all files in a bucket
       produces:
         - application/json
-      operationId: getAllFiles
+      operationId: getAllFilesInBucket
       parameters:
         - name: zone
           in: path
@@ -48,9 +48,9 @@ paths:
             $ref: '#/definitions/QnmgrErrorInfo'
     delete:
       tags:
-        - Files
-      summary: Delete files in a bucket
-      description: Delete files in a bucket
+        - File
+      summary: Delete a batch of files in a bucket
+      description: Delete a batch of files in a bucket
       produces:
       - application/json
       operationId: deleteFiles
@@ -89,11 +89,210 @@ paths:
             type: array
             items:
               type: string
-
-  '/files/{zone}/{bucket}/{directory}':
+  '/file/{zone}/{bucket}/{key}':
     get:
       tags:
-        - Files
+        - File
+      summary: Get one file in a bucket
+      description: Get one file in a bucket
+      produces:
+        - application/json
+      operationId: getFile
+      parameters:
+        - name: zone
+          in: path
+          description: "华东:zone0, 华北:zone1, 华南:zone2, 北美:zoneNa0"
+          required: true
+          type: string
+          enum:
+            - zone0
+            - zone1
+            - zone2
+            - zoneNa0
+        - name: bucket
+          in: path
+          description: bucket name
+          required: true
+          type: string
+        - name: key
+          in: path
+          description: file key
+          required: true
+          type: string
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            $ref: '#/definitions/QnFile'
+        '404':
+          description: Bucket not found
+        '500':
+          description: Internal Error
+          schema:
+            $ref: '#/definitions/QnmgrErrorInfo'
+    delete:
+      tags:
+        - File
+      summary: Delete one file in a bucket
+      description: Delete one file in a bucket
+      produces:
+        - application/json
+      operationId: deleteFile
+      parameters:
+        - name: zone
+          in: path
+          description: "华东:zone0, 华北:zone1, 华南:zone2, 北美:zoneNa0"
+          required: true
+          type: string
+          enum:
+            - zone0
+            - zone1
+            - zone2
+            - zoneNa0
+        - name: bucket
+          in: path
+          description: bucket name
+          required: true
+          type: string
+        - name: key
+          in: path
+          description: file key
+          required: true
+          type: string
+      responses:
+        '200':
+          description: successful operation
+        '404':
+          description: Bucket not found
+        '500':
+          description: Internal Error
+          schema:
+            $ref: '#/definitions/QnmgrErrorInfo'
+  '/file/{zone}/{bucket}/prefix/{prefix}':
+    get:
+      tags:
+        - File
+      summary: Get all files which key start with prefix in a bucket
+      description: Get all files which key start with prefix in a bucket
+      produces:
+        - application/json
+      operationId: getAllFilesStartWithPrefix
+      parameters:
+        - name: zone
+          in: path
+          description: "华东:zone0, 华北:zone1, 华南:zone2, 北美:zoneNa0"
+          required: true
+          type: string
+          enum:
+            - zone0
+            - zone1
+            - zone2
+            - zoneNa0
+        - name: bucket
+          in: path
+          description: bucket name
+          required: true
+          type: string
+        - name: prefix
+          in: path
+          description: prefix
+          required: true
+          type: string
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/QnFile'
+        '404':
+          description: Bucket not found
+        '500':
+          description: Internal Error
+          schema:
+            $ref: '#/definitions/QnmgrErrorInfo'
+    delete:
+      tags:
+        - File
+      summary: Delete all files which key start with prefix in a bucket
+      description: Delete all files which key start with prefix in a bucket
+      produces:
+        - application/json
+      operationId: deleteAllFilesStartWithPrefix
+      parameters:
+        - name: zone
+          in: path
+          description: "华东:zone0, 华北:zone1, 华南:zone2, 北美:zoneNa0"
+          required: true
+          type: string
+          enum:
+            - zone0
+            - zone1
+            - zone2
+            - zoneNa0
+        - name: bucket
+          in: path
+          description: bucket name
+          required: true
+          type: string
+        - name: prefix
+          in: path
+          description: prefix
+          required: true
+          type: string
+      responses:
+        '200':
+          description: successful operation
+        '404':
+          description: Bucket not found
+        '500':
+          description: Internal Error (key list for  files which were failed to delete.)
+          schema:
+            type: array
+            items:
+              type: string
+
+
+  '/dir/{zone}/{bucket}':
+    get:
+      tags:
+        - Directory
+      summary: List all files and sub directories in root directory (one level)
+      description: List all files and sub directories in root directory (one level)
+      produces:
+        - application/json
+      operationId: listRootDir
+      parameters:
+        - name: zone
+          in: path
+          description: "华东:zone0, 华北:zone1, 华南:zone2, 北美:zoneNa0"
+          required: true
+          type: string
+          enum:
+            - zone0
+            - zone1
+            - zone2
+            - zoneNa0
+        - name: bucket
+          in: path
+          description: bucket name
+          required: true
+          type: string
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            $ref: '#/definitions/QnDirInfo'
+        '404':
+          description: Bucket not found
+        '500':
+          description: Internal Error
+          schema:
+            $ref: '#/definitions/QnmgrErrorInfo'
+  '/dir/{zone}/{bucket}/{directory}':
+    get:
+      tags:
+        - Directory
       summary: List all files and sub directories in a directory (one level)
       description: List all files and sub directories in a directory (one level)
       produces:
@@ -118,7 +317,7 @@ paths:
         - name: directory
           in: path
           description: "directory: have to be '<dir>/[<dir>/]..."
-          required: true
+          required: false
           type: string
       responses:
         '200':
@@ -131,15 +330,14 @@ paths:
           description: Internal Error
           schema:
             $ref: '#/definitions/QnmgrErrorInfo'
-  '/files/{zone}/{bucket}/{key}':
     delete:
       tags:
-        - Files
-      summary: Delete on file in a bucket
-      description: Delete on file in a bucket
+        - Directory
+      summary: Delete a directory (all sub tree)
+      description: Delete a directory (all sub tree)
       produces:
-      - application/json
-      operationId: deleteFile
+        - application/json
+      operationId: deleteDir
       parameters:
         - name: zone
           in: path
@@ -156,21 +354,24 @@ paths:
           description: bucket name
           required: true
           type: string
-        - name: key
+        - name: directory
           in: path
-          description: key for file to be deleted.
-          required: true
+          description: "directory: have to be '<dir>/[<dir>/]..."
+          required: false
           type: string
       responses:
         '200':
           description: successful operation
+          schema:
+            $ref: '#/definitions/QnDirInfo'
         '404':
           description: Bucket not found
         '500':
-          description: Internal Error
+          description: Internal Error (key list for  files which were failed to delete.)
           schema:
-            $ref: '#/definitions/QnmgrErrorInfo'
-
+            type: array
+            items:
+              type: string
 definitions:
   QnFile:
     type: object

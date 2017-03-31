@@ -1,6 +1,7 @@
 package com.mfe.qnmgr;
 
-import com.mfe.qnmgr.api.FilesApiServiceImpl;
+import com.mfe.qnmgr.api.DirApiServiceImpl;
+import com.mfe.qnmgr.api.FileApiServiceImpl;
 import com.mfe.qnmgr.constants.ConfigKey;
 import com.mfe.qnmgr.exception.QnMgrException;
 import com.mfe.qnmgr.utils.ClassThief;
@@ -94,8 +95,10 @@ public class Main {
 
     private static void registerQnmgrServerImpl() {
         try {
-            ClassThief.setFinalStatic("com.mfe.qnmgr.restful.qnmgrserver.api.factories.FilesApiServiceFactory",
-                    "service", new FilesApiServiceImpl());
+            ClassThief.setFinalStatic("com.mfe.qnmgr.restful.qnmgrserver.api.factories.FileApiServiceFactory",
+                    "service", new FileApiServiceImpl());
+            ClassThief.setFinalStatic("com.mfe.qnmgr.restful.qnmgrserver.api.factories.DirApiServiceFactory",
+                    "service", new DirApiServiceImpl());
         } catch (Exception e) {
             log.error("registerQnmgrServerImpl", e);
             shutDown();
