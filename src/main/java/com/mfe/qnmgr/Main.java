@@ -21,10 +21,6 @@ public class Main {
     private static Logger log;
     public static void main(String[] args){
 
-        configProxy();
-
-        registerQnmgrServerImpl();
-
         String confPath = loadConf();
 
         System.setProperty("log4j.configurationFile", confPath + "/qnmgr.log4j2.xml");
@@ -32,6 +28,12 @@ public class Main {
         loggerContext.reconfigure();
 
         log = LogManager.getLogger(Main.class);
+
+        configProxy();
+
+        registerQnmgrServerImpl();
+
+
 
         String[] packages = new String[] {
                 "com.mfe.qnmgr.restful.qnmgrserver.api"};
@@ -104,6 +106,7 @@ public class Main {
         String host = ConfLoader.getInstance().getConf(ConfigKey.HTTP_PROXYHOST, null);
         int port = ConfLoader.getInstance().getInt(ConfigKey.HTTP_PROXYPORT, 0);
         if(null!=host && 0!=port){
+            log.info("http proxy enabled: "+host+':'+port);
             System.setProperty("http.proxySet", "true");
             System.setProperty("http.proxyHost", host);
             System.setProperty("http.proxyPort", ""+port);
