@@ -1,20 +1,25 @@
 package com.mfe.qnmgr.utils.qn;
 
 import com.mfe.qnmgr.ConfLoader;
+import com.mfe.qnmgr.business.QnResMgr;
 import com.mfe.qnmgr.constants.ConfigKey;
+import com.mfe.qnmgr.exception.QnMgrException;
 import com.mfe.qnmgr.restful.model.qnmgr.QnDirInfo;
 import com.mfe.qnmgr.restful.model.qnmgr.QnFile;
+import com.mfe.qnmgr.restful.model.qnmgr.QnmgrErrorInfo;
 import com.qiniu.common.QiniuException;
 import com.qiniu.common.Zone;
 import com.qiniu.storage.BucketManager;
 import com.qiniu.storage.model.FileInfo;
 import com.qiniu.storage.model.FileListing;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Created by minichen on 2017/3/30.
  */
 public class Utils {
-
+    private final static Logger log = LogManager.getLogger(Utils.class);
     static public String getAK(){
         return ConfLoader.getInstance().getConf(ConfigKey.AK, "");
     }
@@ -51,7 +56,31 @@ public class Utils {
         return rlt;
     }
 
-    static public QnDirInfo getDirInfo(BucketManager mgr, String bucket, String prefix, int limit, String delimiter){
+    static public QnMgrException toQnMgrException(Exception e){
+        if(null==e) return null;
+        if(e instanceof QiniuException){
+            QiniuException qe=(QiniuException)e;
+            return new QnMgrException(qe.code(), qe.getLocalizedMessage()+", "+qe.error());
+        }else{
+            return new QnMgrException(-1, e.getLocalizedMessage());
+        }
+    }
+
+    static public QnmgrErrorInfo toQnmgrErrorInfo(Exception e){
+        if(null==e) return null;
+        QnmgrErrorInfo rlt=new QnmgrErrorInfo();
+        if(e instanceof QnMgrException){
+            QnMgrException qe=(QnMgrException)e;
+            rlt.setCode(""+qe.errorCode);
+            rlt.setMessage(qe.errorReason_);
+        }else{
+            rlt.setCode(""+(-1));
+            rlt.setMessage(e.getLocalizedMessage());
+        }
+        return rlt;
+    }
+
+    static public QnDirInfo getDirInfo(BucketManager mgr, String bucket, String prefix, int limit, String delimiter) throws QnMgrException {
         String marker = null;
         FileListing f=null;
         QnDirInfo rlt=new QnDirInfo();
@@ -76,9 +105,12 @@ public class Utils {
                 if("".equals(marker)){
                     return rlt;
                 }
-            } catch (QiniuException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
-                return rlt;
+                QnMgrException ee=toQnMgrException(e);
+                if(null!=ee){
+                    throw ee;
+                }
             }
         }
 

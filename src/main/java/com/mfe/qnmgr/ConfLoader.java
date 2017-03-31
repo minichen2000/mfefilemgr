@@ -2,7 +2,6 @@ package com.mfe.qnmgr;
 
 import com.mfe.qnmgr.constants.ConfigKey;
 import com.mfe.qnmgr.exception.QnMgrException;
-import com.mfe.qnmgr.exception.QnMgrExceptionType;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -31,7 +30,7 @@ public class ConfLoader {
 		if (null == value) {
 			value = conf.getProperty(name);
 			if (null == value)
-				throw new QnMgrException(QnMgrExceptionType.EXCPT_CONF_NOT_FOUND,
+				throw new QnMgrException(-1,
 						"No such configuration: '" + name + "'");
 			return value.trim();
 		} else {
@@ -57,7 +56,7 @@ public class ConfLoader {
 		try {
 			return Integer.parseInt(val);
 		} catch (NumberFormatException e) {
-			throw new QnMgrException(QnMgrExceptionType.EXCPT_CONF_NOT_FOUND,
+			throw new QnMgrException(-1,
 					"Illegal int format: '" + val + "' for: " + name, e);
 		}
 	}
@@ -80,7 +79,7 @@ public class ConfLoader {
 			return true;
 		if ("FALSE".equalsIgnoreCase(value))
 			return false;
-		throw new QnMgrException(QnMgrExceptionType.EXCPT_CONF_NOT_FOUND,
+		throw new QnMgrException(-1,
 				"Illegal boolean format: '" + value + "' for: " + name);
 	}
 
@@ -98,7 +97,7 @@ public class ConfLoader {
 			conf.load(fin);
 			fin.close();
 		} catch (IOException e) {
-			throw new QnMgrException(QnMgrExceptionType.EXCPT_IO_ERROR, e.getMessage(), e);
+			throw new QnMgrException(-1, e.getMessage(), e);
 		}
 	}
 

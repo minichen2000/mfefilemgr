@@ -46,6 +46,49 @@ paths:
           description: Internal Error
           schema:
             $ref: '#/definitions/QnmgrErrorInfo'
+    delete:
+      tags:
+        - Files
+      summary: Delete files in a bucket
+      description: Delete files in a bucket
+      produces:
+      - application/json
+      operationId: deleteFiles
+      parameters:
+        - name: zone
+          in: path
+          description: "华东:zone0, 华北:zone1, 华南:zone2, 北美:zoneNa0"
+          required: true
+          type: string
+          enum:
+            - zone0
+            - zone1
+            - zone2
+            - zoneNa0
+        - name: bucket
+          in: path
+          description: bucket name
+          required: true
+          type: string
+        - name: keys
+          in: body
+          description: key list for files to be deleted.
+          required: true
+          schema:
+            type: array
+            items:
+              type: string
+      responses:
+        '200':
+          description: successful operation
+        '404':
+          description: Bucket not found
+        '500':
+          description: Internal Error (key list for  files which were failed to delete.)
+          schema:
+            type: array
+            items:
+              type: string
 
   '/files/{zone}/{bucket}/{directory}':
     get:
@@ -82,6 +125,45 @@ paths:
           description: successful operation
           schema:
             $ref: '#/definitions/QnDirInfo'
+        '404':
+          description: Bucket not found
+        '500':
+          description: Internal Error
+          schema:
+            $ref: '#/definitions/QnmgrErrorInfo'
+  '/files/{zone}/{bucket}/{key}':
+    delete:
+      tags:
+        - Files
+      summary: Delete on file in a bucket
+      description: Delete on file in a bucket
+      produces:
+      - application/json
+      operationId: deleteFile
+      parameters:
+        - name: zone
+          in: path
+          description: "华东:zone0, 华北:zone1, 华南:zone2, 北美:zoneNa0"
+          required: true
+          type: string
+          enum:
+            - zone0
+            - zone1
+            - zone2
+            - zoneNa0
+        - name: bucket
+          in: path
+          description: bucket name
+          required: true
+          type: string
+        - name: key
+          in: path
+          description: key for file to be deleted.
+          required: true
+          type: string
+      responses:
+        '200':
+          description: successful operation
         '404':
           description: Bucket not found
         '500':

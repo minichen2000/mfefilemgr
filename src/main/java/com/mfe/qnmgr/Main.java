@@ -21,6 +21,8 @@ public class Main {
     private static Logger log;
     public static void main(String[] args){
 
+        configProxy();
+
         registerQnmgrServerImpl();
 
         String confPath = loadConf();
@@ -96,5 +98,16 @@ public class Main {
             log.error("registerQnmgrServerImpl", e);
             shutDown();
         }
+    }
+
+    private static void configProxy(){
+        String host = ConfLoader.getInstance().getConf(ConfigKey.HTTP_PROXYHOST, null);
+        int port = ConfLoader.getInstance().getInt(ConfigKey.HTTP_PROXYPORT, 0);
+        if(null!=host && 0!=port){
+            System.setProperty("http.proxySet", "true");
+            System.setProperty("http.proxyHost", host);
+            System.setProperty("http.proxyPort", ""+port);
+        }
+
     }
 }
