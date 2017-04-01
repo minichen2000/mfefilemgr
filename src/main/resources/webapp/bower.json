@@ -8,6 +8,8 @@
     "angular": "1.5.5",
     "jquery": "~2.2.3",
     "angular-bootstrap": "1.3.3",
-    "qiniu": ""
+    "qiniu": "",
+    "angular-tools/ng-jsoneditor": "v1.0.0",
+    "angular-zeroclipboard": "v0.8.0"
   }
 }

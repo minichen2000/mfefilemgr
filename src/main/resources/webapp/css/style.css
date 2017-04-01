@@ -75,3 +75,10 @@ body{
   background-color: #f9f2f4;
   border-radius: 4px;
 }
+
+.h-v-center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translateX(-50%) translateY(-50%);
+}

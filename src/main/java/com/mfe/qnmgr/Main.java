@@ -8,13 +8,18 @@ import com.mfe.qnmgr.utils.ClassThief;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.core.LoggerContext;
+import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.server.handler.HandlerList;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 import org.glassfish.jersey.jackson.JacksonFeature;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.servlet.ServletContainer;
 import org.eclipse.jetty.webapp.WebAppContext;
+
+import java.net.URISyntaxException;
+import java.net.URL;
 
 /**
  * Created by chenmin on 2017/3/30.
@@ -37,22 +42,48 @@ public class Main {
 
 
 
+
+
+        ////////////////////////
+        //swagger
         String[] packages = new String[] {
                 "com.mfe.qnmgr.restful.qnmgrserver.api"};
 
         ResourceConfig config = new ResourceConfig().packages(packages).register(JacksonFeature.class)
                 .register(AccessControlFilter.class);
 
-        ServletHolder servlet = new ServletHolder(new ServletContainer(config));
+        ServletHolder swagger_servlet = new ServletHolder(new ServletContainer(config));
+
+
+        ServletContextHandler swaggerContext = new ServletContextHandler();
+        swaggerContext.setContextPath("/qnmgr/*");
+        swaggerContext.addServlet(swagger_servlet, "/*");
+        ////////////////////////
+        //webapp
+        WebAppContext webAppContext = new WebAppContext();
+        webAppContext.setContextPath("/");
+        webAppContext.setDescriptor("webapp" + "/WEB-INF/web.xml");
+
+        URL webAppDir = Thread.currentThread().getContextClassLoader().getResource("webapp");
+        if (webAppDir == null) {
+            throw new RuntimeException(String.format("No %s directory was found into the JAR file", "webapp"));
+        }
+        try {
+            webAppContext.setResourceBase(webAppDir.toURI().toString());
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
+        webAppContext.setParentLoaderPriority(true);
+        HandlerList handlers = new HandlerList();
+        handlers.setHandlers(new Handler[] {swaggerContext, webAppContext});
+
+        ////////////////////////
 
         final int port = ConfLoader.getInstance().getInt(ConfigKey.QNMGR_PORT, ConfigKey.DEFAULT_QNMGR_PORT);
         final Server server = new Server(port);
-        ServletContextHandler context = new ServletContextHandler(server, "/qnmgr/*");
-        context.addServlet(servlet, "/*");
+        server.setHandler(handlers);
 
-        ////////////////////////
-        WebAppContext root = new WebAppContext();
-        ////////////////////////
+
         new Thread(new Runnable() {
 
             @Override
