@@ -44,7 +44,7 @@ public class Main {
 
         ServletHolder servlet = new ServletHolder(new ServletContainer(config));
 
-        int port = ConfLoader.getInstance().getInt(ConfigKey.QNMGR_PORT, ConfigKey.DEFAULT_QNMGR_PORT);
+        final int port = ConfLoader.getInstance().getInt(ConfigKey.QNMGR_PORT, ConfigKey.DEFAULT_QNMGR_PORT);
         final Server server = new Server(port);
         ServletContextHandler context = new ServletContextHandler(server, "/qnmgr/*");
         context.addServlet(servlet, "/*");

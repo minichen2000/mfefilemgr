@@ -11,8 +11,8 @@
 
     <properties>
         <swagger-model-path>swagger_models</swagger-model-path>
-        <jdkCompileVersion>1.8</jdkCompileVersion>
-        <jettyVersion>9.3.10.v20160621</jettyVersion>
+        <jdkCompileVersion>1.7</jdkCompileVersion>
+        <jettyVersion>9.2.21.v20170120</jettyVersion>
         <jerseyVersion>2.1</jerseyVersion>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
