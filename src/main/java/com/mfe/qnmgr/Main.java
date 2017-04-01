@@ -14,6 +14,7 @@ import org.eclipse.jetty.servlet.ServletHolder;
 import org.glassfish.jersey.jackson.JacksonFeature;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.servlet.ServletContainer;
+import org.eclipse.jetty.webapp.WebAppContext;
 
 /**
  * Created by chenmin on 2017/3/30.
@@ -48,6 +49,10 @@ public class Main {
         final Server server = new Server(port);
         ServletContextHandler context = new ServletContextHandler(server, "/qnmgr/*");
         context.addServlet(servlet, "/*");
+
+        ////////////////////////
+        WebAppContext root = new WebAppContext();
+        ////////////////////////
         new Thread(new Runnable() {
 
             @Override
