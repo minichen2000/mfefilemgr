@@ -1,5 +1,5 @@
 {
-  "name": "qnMgr",
+  "name": "mfeFileMgr",
   "private": "true",
   "devDependencies": {
     "crypto-js": "",

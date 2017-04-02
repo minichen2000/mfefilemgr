@@ -1,14 +1,14 @@
 swagger: '2.0'
 info:
-  description: MFE QNMGR RESTful interface.
+  description: Mfe file manager RESTful interface.
   version: 1.0.12
-  title: Qnmgr API
+  title: MfeFileMgr API
 basePath: /
 schemes:
   - http
   - https
 paths:
-  '/file/{zone}/{bucket}':
+  '/file/{provider}/{endpoint}/{bucket}':
     get:
       tags:
         - File
@@ -18,16 +18,17 @@ paths:
         - application/json
       operationId: getAllFilesInBucket
       parameters:
-        - name: zone
+        - name: provider
           in: path
-          description: "华东:zone0, 华北:zone1, 华南:zone2, 北美:zoneNa0"
+          required: true
+          description: is not case sensitive.
+          schema:
+            $ref: '#/definitions/Provider'
+        - name: endpoint
+          in: path
+          description: "对应于aliyun的'endpoint'，对应于qiniu的'zone'"
           required: true
           type: string
-          enum:
-            - zone0
-            - zone1
-            - zone2
-            - zoneNa0
         - name: bucket
           in: path
           description: bucket name
@@ -39,13 +40,13 @@ paths:
           schema:
             type: array
             items:
-              $ref: '#/definitions/QnFile'
+              $ref: '#/definitions/MfeFile'
         '404':
           description: Bucket not found
         '500':
           description: Internal Error
           schema:
-            $ref: '#/definitions/QnmgrErrorInfo'
+            $ref: '#/definitions/MfeFileMgrErrorInfo'
     delete:
       tags:
         - File
@@ -55,16 +56,16 @@ paths:
       - application/json
       operationId: deleteFiles
       parameters:
-        - name: zone
+        - name: provider
           in: path
-          description: "华东:zone0, 华北:zone1, 华南:zone2, 北美:zoneNa0"
+          required: true
+          description: is not case sensitive.
+          schema:
+            $ref: '#/definitions/Provider'
+        - name: endpoint
+          in: path
           required: true
           type: string
-          enum:
-            - zone0
-            - zone1
-            - zone2
-            - zoneNa0
         - name: bucket
           in: path
           description: bucket name
@@ -89,7 +90,7 @@ paths:
             type: array
             items:
               type: string
-  '/file/{zone}/{bucket}/{key}':
+  '/file/{provider}/{endpoint}/{bucket}/{key}':
     get:
       tags:
         - File
@@ -99,16 +100,16 @@ paths:
         - application/json
       operationId: getFile
       parameters:
-        - name: zone
+        - name: provider
           in: path
-          description: "华东:zone0, 华北:zone1, 华南:zone2, 北美:zoneNa0"
+          required: true
+          description: is not case sensitive.
+          schema:
+            $ref: '#/definitions/Provider'
+        - name: endpoint
+          in: path
           required: true
           type: string
-          enum:
-            - zone0
-            - zone1
-            - zone2
-            - zoneNa0
         - name: bucket
           in: path
           description: bucket name
@@ -123,13 +124,13 @@ paths:
         '200':
           description: successful operation
           schema:
-            $ref: '#/definitions/QnFile'
+            $ref: '#/definitions/MfeFile'
         '404':
           description: Bucket not found
         '500':
           description: Internal Error
           schema:
-            $ref: '#/definitions/QnmgrErrorInfo'
+            $ref: '#/definitions/MfeFileMgrErrorInfo'
     delete:
       tags:
         - File
@@ -139,16 +140,16 @@ paths:
         - application/json
       operationId: deleteFile
       parameters:
-        - name: zone
+        - name: provider
           in: path
-          description: "华东:zone0, 华北:zone1, 华南:zone2, 北美:zoneNa0"
+          required: true
+          description: is not case sensitive.
+          schema:
+            $ref: '#/definitions/Provider'
+        - name: endpoint
+          in: path
           required: true
           type: string
-          enum:
-            - zone0
-            - zone1
-            - zone2
-            - zoneNa0
         - name: bucket
           in: path
           description: bucket name
@@ -167,8 +168,8 @@ paths:
         '500':
           description: Internal Error
           schema:
-            $ref: '#/definitions/QnmgrErrorInfo'
-  '/file/{zone}/{bucket}/prefix/{prefix}':
+            $ref: '#/definitions/MfeFileMgrErrorInfo'
+  '/file/{provider}/{endpoint}/{bucket}/prefix/{prefix}':
     get:
       tags:
         - File
@@ -178,16 +179,16 @@ paths:
         - application/json
       operationId: getAllFilesStartWithPrefix
       parameters:
-        - name: zone
+        - name: provider
           in: path
-          description: "华东:zone0, 华北:zone1, 华南:zone2, 北美:zoneNa0"
+          required: true
+          description: is not case sensitive.
+          schema:
+            $ref: '#/definitions/Provider'
+        - name: endpoint
+          in: path
           required: true
           type: string
-          enum:
-            - zone0
-            - zone1
-            - zone2
-            - zoneNa0
         - name: bucket
           in: path
           description: bucket name
@@ -204,13 +205,13 @@ paths:
           schema:
             type: array
             items:
-              $ref: '#/definitions/QnFile'
+              $ref: '#/definitions/MfeFile'
         '404':
           description: Bucket not found
         '500':
           description: Internal Error
           schema:
-            $ref: '#/definitions/QnmgrErrorInfo'
+            $ref: '#/definitions/MfeFileMgrErrorInfo'
     delete:
       tags:
         - File
@@ -220,16 +221,16 @@ paths:
         - application/json
       operationId: deleteAllFilesStartWithPrefix
       parameters:
-        - name: zone
+        - name: provider
           in: path
-          description: "华东:zone0, 华北:zone1, 华南:zone2, 北美:zoneNa0"
+          required: true
+          description: is not case sensitive.
+          schema:
+            $ref: '#/definitions/Provider'
+        - name: endpoint
+          in: path
           required: true
           type: string
-          enum:
-            - zone0
-            - zone1
-            - zone2
-            - zoneNa0
         - name: bucket
           in: path
           description: bucket name
@@ -253,7 +254,7 @@ paths:
               type: string
 
 
-  '/dir/{zone}/{bucket}':
+  '/dir/{provider}/{endpoint}/{bucket}':
     get:
       tags:
         - Directory
@@ -263,16 +264,16 @@ paths:
         - application/json
       operationId: listRootDir
       parameters:
-        - name: zone
+        - name: provider
           in: path
-          description: "华东:zone0, 华北:zone1, 华南:zone2, 北美:zoneNa0"
+          required: true
+          description: is not case sensitive.
+          schema:
+            $ref: '#/definitions/Provider'
+        - name: endpoint
+          in: path
           required: true
           type: string
-          enum:
-            - zone0
-            - zone1
-            - zone2
-            - zoneNa0
         - name: bucket
           in: path
           description: bucket name
@@ -282,14 +283,14 @@ paths:
         '200':
           description: successful operation
           schema:
-            $ref: '#/definitions/QnDirInfo'
+            $ref: '#/definitions/MfeDirInfo'
         '404':
           description: Bucket not found
         '500':
           description: Internal Error
           schema:
-            $ref: '#/definitions/QnmgrErrorInfo'
-  '/dir/{zone}/{bucket}/{directory}':
+            $ref: '#/definitions/MfeFileMgrErrorInfo'
+  '/dir/{provider}/{endpoint}/{bucket}/{directory}':
     get:
       tags:
         - Directory
@@ -299,16 +300,16 @@ paths:
         - application/json
       operationId: listDir
       parameters:
-        - name: zone
+        - name: provider
           in: path
-          description: "华东:zone0, 华北:zone1, 华南:zone2, 北美:zoneNa0"
+          required: true
+          description: is not case sensitive.
+          schema:
+            $ref: '#/definitions/Provider'
+        - name: endpoint
+          in: path
           required: true
           type: string
-          enum:
-            - zone0
-            - zone1
-            - zone2
-            - zoneNa0
         - name: bucket
           in: path
           description: bucket name
@@ -323,13 +324,13 @@ paths:
         '200':
           description: successful operation
           schema:
-            $ref: '#/definitions/QnDirInfo'
+            $ref: '#/definitions/MfeDirInfo'
         '404':
           description: Bucket not found
         '500':
           description: Internal Error
           schema:
-            $ref: '#/definitions/QnmgrErrorInfo'
+            $ref: '#/definitions/MfeFileMgrErrorInfo'
     delete:
       tags:
         - Directory
@@ -339,16 +340,16 @@ paths:
         - application/json
       operationId: deleteDir
       parameters:
-        - name: zone
+        - name: provider
           in: path
-          description: "华东:zone0, 华北:zone1, 华南:zone2, 北美:zoneNa0"
+          required: true
+          description: is not case sensitive.
+          schema:
+            $ref: '#/definitions/Provider'
+        - name: endpoint
+          in: path
           required: true
           type: string
-          enum:
-            - zone0
-            - zone1
-            - zone2
-            - zoneNa0
         - name: bucket
           in: path
           description: bucket name
@@ -363,7 +364,7 @@ paths:
         '200':
           description: successful operation
           schema:
-            $ref: '#/definitions/QnDirInfo'
+            $ref: '#/definitions/MfeDirInfo'
         '404':
           description: Bucket not found
         '500':
@@ -373,9 +374,9 @@ paths:
             items:
               type: string
 definitions:
-  QnFile:
+  MfeFile:
     type: object
-    description: the qn FileInfo model
+    description: Mfefile model
     properties:
       key:
         type: string
@@ -394,7 +395,7 @@ definitions:
       hash:
         type: string
 
-  QnDirInfo:
+  MfeDirInfo:
     type: object
     description: "directory info: including files and sub dirs."
     properties:
@@ -402,18 +403,28 @@ definitions:
         type: array
         description: files in this directory.
         items:
-          $ref: '#/definitions/QnFile'
+          $ref: '#/definitions/MfeFile'
       subdirs:
         type: array
         description: subdirs in this directory.
         items:
           type: string
+  Provider:
+    description: is not case sensitive.
+    type: string
+    enum:
+      - MFEFILEMGR
+      - QINIU
+      - ALIYUN
+      - AWS
 
-  QnmgrErrorInfo:
+  MfeFileMgrErrorInfo:
     type: object
     properties:
+      provider:
+        $ref: "#/definitions/Provider"
       code:
-        type: string
+        type: integer
       message:
         type: string
         example: File %s creation error

@@ -1,7 +1,7 @@
 {
-  "name": "qnMgr",
+  "name": "mfeFileMgr",
   "version": "1.1.1",
-  "description": "qnMgr",
+  "description": "mfeFileMgr",
   "devDependencies": {
     "bower": "^1.7.9",
     "http-server": "^0.9.0"

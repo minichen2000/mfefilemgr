@@ -1,4 +1,4 @@
-package com.mfe.qnmgr.exception;
+package com.mfe.mfefilemgr.exception;
 
 public enum ErrorCode {
     // ------------------------------------

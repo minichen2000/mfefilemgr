@@ -1,8 +1,0 @@
-{
-  "groupId":"com.mfe.qnmgr",
-  "artifactId":"restful-api-lib-qnmgr-server",
-  "artifactVersion":"1.1.0",
-  "library":"jersey2",
-  "apiPackage": "com.mfe.qnmgr.restful.qnmgrserver.api",
-  "modelPackage": "com.mfe.qnmgr.restful.model.qnmgr"
-}

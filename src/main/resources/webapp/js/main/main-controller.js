@@ -10,7 +10,7 @@
     MainController.$inject = ['$http', '$scope', 'commonUtil', 'logger', 'qnUtil'];
     function MainController($http, $scope, commonUtil, logger, qnUtil) {
         var vm = this;
-        vm.localUrl="/qnmgr/file/zone0/tc-image2/";
+        vm.localUrl="/mfefilemgr/file/qiniu/zone0/tc-image2/";
         vm.component="";
         vm.requestBody="";
         vm.result="";

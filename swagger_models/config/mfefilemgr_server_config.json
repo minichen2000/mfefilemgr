@@ -1,0 +1,8 @@
+{
+  "groupId":"com.mfe.mfefilemgr",
+  "artifactId":"restful-api-lib-mfefilemgr-server",
+  "artifactVersion":"1.1.0",
+  "library":"jersey2",
+  "apiPackage": "com.mfe.mfefilemgr.restful.mfefilemgrserver.api",
+  "modelPackage": "com.mfe.mfefilemgr.restful.model.mfefilemgr"
+}

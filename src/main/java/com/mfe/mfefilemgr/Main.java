@@ -1,10 +1,10 @@
-package com.mfe.qnmgr;
+package com.mfe.mfefilemgr;
 
-import com.mfe.qnmgr.api.DirApiServiceImpl;
-import com.mfe.qnmgr.api.FileApiServiceImpl;
-import com.mfe.qnmgr.constants.ConfigKey;
-import com.mfe.qnmgr.exception.QnMgrException;
-import com.mfe.qnmgr.utils.ClassThief;
+import com.mfe.mfefilemgr.api.DirApiServiceImpl;
+import com.mfe.mfefilemgr.api.FileApiServiceImpl;
+import com.mfe.mfefilemgr.constants.ConfigKey;
+import com.mfe.mfefilemgr.exception.MfeFileMgrException;
+import com.mfe.mfefilemgr.utils.ClassThief;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.core.LoggerContext;
@@ -30,7 +30,7 @@ public class Main {
 
         String confPath = loadConf();
 
-        System.setProperty("log4j.configurationFile", confPath + "/qnmgr.log4j2.xml");
+        System.setProperty("log4j.configurationFile", confPath + "/mfefilemgr.log4j2.xml");
         LoggerContext loggerContext = (LoggerContext) LogManager.getContext(false);
         loggerContext.reconfigure();
 
@@ -38,16 +38,11 @@ public class Main {
 
         configProxy();
 
-        registerQnmgrServerImpl();
-
-
-
-
-
+        registerMfefilemgrServerImpl();
         ////////////////////////
-        //swagger
+        //swagger context
         String[] packages = new String[] {
-                "com.mfe.qnmgr.restful.qnmgrserver.api"};
+                "com.mfe.mfefilemgr.restful.mfefilemgrserver.api"};
 
         ResourceConfig config = new ResourceConfig().packages(packages).register(JacksonFeature.class)
                 .register(AccessControlFilter.class);
@@ -56,10 +51,10 @@ public class Main {
 
 
         ServletContextHandler swaggerContext = new ServletContextHandler();
-        swaggerContext.setContextPath("/qnmgr/*");
+        swaggerContext.setContextPath("/mfefilemgr/*");
         swaggerContext.addServlet(swagger_servlet, "/*");
         ////////////////////////
-        //webapp
+        //webapp context
         WebAppContext webAppContext = new WebAppContext();
         webAppContext.setContextPath("/");
         webAppContext.setDescriptor("webapp" + "/WEB-INF/web.xml");
@@ -79,7 +74,7 @@ public class Main {
 
         ////////////////////////
 
-        final int port = ConfLoader.getInstance().getInt(ConfigKey.QNMGR_PORT, ConfigKey.DEFAULT_QNMGR_PORT);
+        final int port = ConfLoader.getInstance().getInt(ConfigKey.MFEFILEMGR_PORT, ConfigKey.DEFAULT_MFEFILEMGR_PORT);
         final Server server = new Server(port);
         server.setHandler(handlers);
 
@@ -91,14 +86,14 @@ public class Main {
                 try {
                     try {
                         server.start();
-                        log.info("Qnmgr server started@" + port);
+                        log.info("Mfefilemgr server started@" + port);
                         server.join();
                     } catch (Exception e) {
-                        log.error("Qnmgr server start@" + port + " failed", e);
+                        log.error("Mfefilemgr server start@" + port + " failed", e);
                         shutDown();
                     }
                 } finally {
-                    log.error("Adapter server exit@" + port + " failed");
+                    log.error("Mfefilemgr server exit@" + port + " failed");
                     server.destroy();
                 }
 
@@ -107,17 +102,17 @@ public class Main {
     }
 
     private static String loadConf() {
-        String confPath = System.getProperty("QNMGR_CONFPATH");
+        String confPath = System.getProperty(ConfigKey.MFEFILEMGR_CONFPATH);
         if (null == confPath) {
-            confPath = System.getenv("QNMGR_CONFPATH");
+            confPath = System.getenv(ConfigKey.MFEFILEMGR_CONFPATH);
         }
         if (null == confPath) {
             confPath = System.getProperty("user.home");
         }
 
         try {
-            ConfLoader.getInstance().loadConf(confPath + "/qnmgr.conf.properties");
-        } catch (QnMgrException e) {
+            ConfLoader.getInstance().loadConf(confPath + "/mfefilemgr.conf.properties");
+        } catch (MfeFileMgrException e) {
             e.printStackTrace();
             shutDown();
         }
@@ -129,14 +124,14 @@ public class Main {
         System.exit(1);
     }
 
-    private static void registerQnmgrServerImpl() {
+    private static void registerMfefilemgrServerImpl() {
         try {
-            ClassThief.setFinalStatic("com.mfe.qnmgr.restful.qnmgrserver.api.factories.FileApiServiceFactory",
+            ClassThief.setFinalStatic("com.mfe.mfefilemgr.restful.mfefilemgrserver.api.factories.FileApiServiceFactory",
                     "service", new FileApiServiceImpl());
-            ClassThief.setFinalStatic("com.mfe.qnmgr.restful.qnmgrserver.api.factories.DirApiServiceFactory",
+            ClassThief.setFinalStatic("com.mfe.mfefilemgr.restful.mfefilemgrserver.api.factories.DirApiServiceFactory",
                     "service", new DirApiServiceImpl());
         } catch (Exception e) {
-            log.error("registerQnmgrServerImpl", e);
+            log.error("registerMfefilemgrServerImpl", e);
             shutDown();
         }
     }

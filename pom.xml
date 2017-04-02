@@ -4,8 +4,8 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.mfe.qnmgr</groupId>
-    <artifactId>qnmgr</artifactId>
+    <groupId>com.mfe.mfefilemgr</groupId>
+    <artifactId>mfefilemgr</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 
@@ -120,7 +120,7 @@
     </dependencies>
 
     <build>
-        <finalName>qnmgr</finalName>
+        <finalName>mfefilemgr</finalName>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -228,7 +228,7 @@
                 <executions>
                     <!-- ###################################################### -->
                     <execution>
-                        <id>gen-qnmgr-model-source</id>
+                        <id>gen-mfefilemgr-model-source</id>
                         <phase>generate-sources</phase>
                         <goals>
                             <goal>exec</goal>
@@ -243,19 +243,19 @@
                                 <argument>target/swagger-codegen-cli-${swagger-codegen-cli-version}.jar</argument>
                                 <argument>generate</argument>
                                 <argument>-i</argument>
-                                <argument>${swagger-model-path}/qnmgr.yaml</argument>
+                                <argument>${swagger-model-path}/mfefilemgr.yaml</argument>
                                 <argument>-l</argument>
                                 <argument>jaxrs</argument>
                                 <argument>-o</argument>
                                 <argument>${swagger-api-path}</argument>
                                 <argument>-c</argument>
-                                <argument>${swagger-model-path}/config/qnmgr_model_config.json</argument>
+                                <argument>${swagger-model-path}/config/mfefilemgr_model_config.json</argument>
                                 <argument>-s</argument>
                             </arguments>
                         </configuration>
                     </execution>
                     <execution>
-                        <id>gen-qnmgr-server-source</id>
+                        <id>gen-mfefilemgr-server-source</id>
                         <phase>generate-sources</phase>
                         <goals>
                             <goal>exec</goal>
@@ -271,13 +271,13 @@
                                 <argument>target/swagger-codegen-cli-${swagger-codegen-cli-version}.jar</argument>
                                 <argument>generate</argument>
                                 <argument>-i</argument>
-                                <argument>${swagger-model-path}/qnmgr.yaml</argument>
+                                <argument>${swagger-model-path}/mfefilemgr.yaml</argument>
                                 <argument>-l</argument>
                                 <argument>jaxrs</argument>
                                 <argument>-o</argument>
                                 <argument>${swagger-api-path}</argument>
                                 <argument>-c</argument>
-                                <argument>${swagger-model-path}/config/qnmgr_server_config.json</argument>
+                                <argument>${swagger-model-path}/config/mfefilemgr_server_config.json</argument>
                                 <argument>-s</argument>
                             </arguments>
                         </configuration>
@@ -315,7 +315,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>com.mfe.qnmgr.Main</mainClass>
+                            <mainClass>com.mfe.mfefilemgr.Main</mainClass>
                         </manifest>
                     </archive>
                     <descriptors>

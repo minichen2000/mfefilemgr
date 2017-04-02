@@ -1,7 +1,8 @@
-package com.mfe.qnmgr;
+package com.mfe.mfefilemgr;
 
-import com.mfe.qnmgr.constants.ConfigKey;
-import com.mfe.qnmgr.exception.QnMgrException;
+import com.mfe.mfefilemgr.constants.ConfigKey;
+import com.mfe.mfefilemgr.exception.MfeFileMgrException;
+import com.mfe.mfefilemgr.restful.model.mfefilemgr.Provider;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -20,17 +21,17 @@ public class ConfLoader {
 		return confLoader;
 	}
 
-	public void loadConf(String confFile) throws QnMgrException {
+	public void loadConf(String confFile) throws MfeFileMgrException {
 		loadOneConfFile(confFile);
 		loadReferenceConfFiles(new File(confFile).getParentFile());
 	}
 
-	public String getConf(String name) throws QnMgrException {
+	public String getConf(String name) throws MfeFileMgrException {
 		String value = System.getProperty(name);
 		if (null == value) {
 			value = conf.getProperty(name);
 			if (null == value)
-				throw new QnMgrException(-1,
+				throw new MfeFileMgrException(Provider.MFEFILEMGR, -1,
 						"No such configuration: '" + name + "'");
 			return value.trim();
 		} else {
@@ -51,12 +52,12 @@ public class ConfLoader {
 		return conf.containsKey(name);
 	}
 
-	public int getInt(String name) throws QnMgrException {
+	public int getInt(String name) throws MfeFileMgrException {
 		String val = getConf(name);
 		try {
 			return Integer.parseInt(val);
 		} catch (NumberFormatException e) {
-			throw new QnMgrException(-1,
+			throw new MfeFileMgrException(Provider.MFEFILEMGR, -1,
 					"Illegal int format: '" + val + "' for: " + name, e);
 		}
 	}
@@ -64,12 +65,12 @@ public class ConfLoader {
 	public int getInt(String name, int defaultValue) {
 		try {
 			return getInt(name);
-		} catch (QnMgrException e) {
+		} catch (MfeFileMgrException e) {
 			return defaultValue;
 		}
 	}
 
-	public boolean getBoolean(String name) throws QnMgrException {
+	public boolean getBoolean(String name) throws MfeFileMgrException {
 		String value = System.getProperty(name);
 		if (null == value) {
 			value = conf.getProperty(name);
@@ -79,33 +80,33 @@ public class ConfLoader {
 			return true;
 		if ("FALSE".equalsIgnoreCase(value))
 			return false;
-		throw new QnMgrException(-1,
+		throw new MfeFileMgrException(Provider.MFEFILEMGR, -1,
 				"Illegal boolean format: '" + value + "' for: " + name);
 	}
 
 	public boolean getBoolean(String name, boolean defaultValue) {
 		try {
 			return getBoolean(name);
-		} catch (QnMgrException e) {
+		} catch (MfeFileMgrException e) {
 			return defaultValue;
 		}
 	}
 
-	private void loadOneConfFile(String file) throws QnMgrException {
+	private void loadOneConfFile(String file) throws MfeFileMgrException {
 		try {
 			FileInputStream fin = new FileInputStream(file);
 			conf.load(fin);
 			fin.close();
 		} catch (IOException e) {
-			throw new QnMgrException(-1, e.getMessage(), e);
+			throw new MfeFileMgrException(Provider.MFEFILEMGR, -1, e.getMessage(), e);
 		}
 	}
 
-	private void loadReferenceConfFiles(File dir) throws QnMgrException {
+	private void loadReferenceConfFiles(File dir) throws MfeFileMgrException {
 		String referenceConfFiles = null;
 		try {
 			referenceConfFiles = getConf(ConfigKey.REFERENCE_CONF_FILES);
-		} catch (QnMgrException e) {
+		} catch (MfeFileMgrException e) {
 			return;
 		}
 		String[] files = referenceConfFiles.split("\\s*,\\s*");

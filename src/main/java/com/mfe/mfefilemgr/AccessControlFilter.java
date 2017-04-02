@@ -1,4 +1,4 @@
-package com.mfe.qnmgr;
+package com.mfe.mfefilemgr;
 
 import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.container.ContainerResponseContext;

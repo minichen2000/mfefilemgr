@@ -2,8 +2,8 @@
 <configuration status="off">
     <properties>
         <property name="LOG_HOME">./maintenance/trace</property>
-        <property name="FILE_NAME">qnmgr_log</property>
-        <property name="FILE_NAME_ERROR">qnmgr_error</property>
+        <property name="FILE_NAME">mfefilemgr_log</property>
+        <property name="FILE_NAME_ERROR">mfefilemgr_error</property>
         <property name="FILE_NAME_JETTY">jetty/log</property>
     </properties>
     <appenders>
