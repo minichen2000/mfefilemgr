@@ -20,11 +20,11 @@ import javax.ws.rs.core.Response;
  */
 public class QnUtils {
     private final static Logger log = LogManager.getLogger(QnUtils.class);
-    static public String get_QiNiu_AK(){
+    static public String getAK(){
         return ConfLoader.getInstance().getConf(ConfigKey.QINIU_AK, "");
     }
 
-    static public String get_QiuNiu_SK(){
+    static public String getSK(){
         return ConfLoader.getInstance().getConf(ConfigKey.QINIU_SK, "");
     }
 
@@ -58,11 +58,11 @@ public class QnUtils {
 
     static public MfeFileMgrException toMfeFileMgrException(QiniuException e){
         if(null==e) return null;
-        return new MfeFileMgrException(Provider.QINIU, e.code(), e.error());
+        return new MfeFileMgrException(Provider.QINIU, ""+e.code(), e.error());
     }
 
     static public MfeFileMgrException buildQiniuExceptionFileNotFound(){
-        return new MfeFileMgrException(Provider.QINIU, 612, "no such file or directory");
+        return new MfeFileMgrException(Provider.QINIU, ""+612, "no such file or directory");
     }
 
 

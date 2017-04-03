@@ -31,7 +31,7 @@ public class ConfLoader {
 		if (null == value) {
 			value = conf.getProperty(name);
 			if (null == value)
-				throw new MfeFileMgrException(Provider.MFEFILEMGR, -1,
+				throw new MfeFileMgrException(Provider.MFEFILEMGR, "-1",
 						"No such configuration: '" + name + "'");
 			return value.trim();
 		} else {
@@ -57,7 +57,7 @@ public class ConfLoader {
 		try {
 			return Integer.parseInt(val);
 		} catch (NumberFormatException e) {
-			throw new MfeFileMgrException(Provider.MFEFILEMGR, -1,
+			throw new MfeFileMgrException(Provider.MFEFILEMGR, "-1",
 					"Illegal int format: '" + val + "' for: " + name, e);
 		}
 	}
@@ -80,7 +80,7 @@ public class ConfLoader {
 			return true;
 		if ("FALSE".equalsIgnoreCase(value))
 			return false;
-		throw new MfeFileMgrException(Provider.MFEFILEMGR, -1,
+		throw new MfeFileMgrException(Provider.MFEFILEMGR, "-1",
 				"Illegal boolean format: '" + value + "' for: " + name);
 	}
 
@@ -98,7 +98,7 @@ public class ConfLoader {
 			conf.load(fin);
 			fin.close();
 		} catch (IOException e) {
-			throw new MfeFileMgrException(Provider.MFEFILEMGR, -1, e.getMessage(), e);
+			throw new MfeFileMgrException(Provider.MFEFILEMGR, "-1", e.getMessage(), e);
 		}
 	}
 

@@ -424,7 +424,7 @@ definitions:
       provider:
         $ref: "#/definitions/Provider"
       code:
-        type: integer
+        type: string
       message:
         type: string
         example: File %s creation error

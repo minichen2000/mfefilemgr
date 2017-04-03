@@ -20,4 +20,12 @@ public class ConfigKey {
 	public static final String QINIU_DIR_DELIMITER = "QINIU_DIR_DELIMITER";
 
 	public static final String DEFAULT_QINIU_DIR_DELIMITER = "/";
+
+	public static final String ALIYUN_AK = "ALIYUN_AK";
+
+	public static final String ALIYUN_SK = "ALIYUN_SK";
+
+	public static final String ALIYUN_DIR_DELIMITER = "ALIYUN_DIR_DELIMITER";
+
+	public static final String DEFAULT_ALIYUN_DIR_DELIMITER = "/";
 }

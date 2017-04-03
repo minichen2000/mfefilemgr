@@ -1,5 +1,6 @@
 package com.mfe.mfefilemgr.utils;
 
+import com.mfe.mfefilemgr.business.AliyunResMgr;
 import com.mfe.mfefilemgr.business.QnResMgr;
 import com.mfe.mfefilemgr.business.intf.IMfeFileMgr;
 import com.mfe.mfefilemgr.constants.ConfigKey;
@@ -18,6 +19,7 @@ public class MfeFileMgrPool {
     static private void init() {
         pool = new HashMap<Provider, IMfeFileMgr>();
         pool.put(Provider.QINIU, QnResMgr.getInstance());
+        pool.put(Provider.ALIYUN, AliyunResMgr.getInstance());
     }
     static public IMfeFileMgr getMgr(Provider provider) {
         if (null == pool) {
