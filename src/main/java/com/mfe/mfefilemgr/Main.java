@@ -57,18 +57,21 @@ public class Main {
         //webapp context
         WebAppContext webAppContext = new WebAppContext();
         webAppContext.setContextPath("/");
-        webAppContext.setDescriptor("webapp" + "/WEB-INF/web.xml");
+        //webAppContext.setDescriptor("webapp" + "/WEB-INF/web.xml");
 
         URL webAppDir = Thread.currentThread().getContextClassLoader().getResource("webapp");
         if (webAppDir == null) {
             throw new RuntimeException(String.format("No %s directory was found into the JAR file", "webapp"));
         }
         try {
+            log.debug("webAppDir: "+webAppDir.toString());
+            log.debug("webAppContext.setResourceBase: "+webAppDir.toURI().toString());
             webAppContext.setResourceBase(webAppDir.toURI().toString());
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }
-        webAppContext.setParentLoaderPriority(true);
+
+        //webAppContext.setParentLoaderPriority(true);
         HandlerList handlers = new HandlerList();
         handlers.setHandlers(new Handler[] {swaggerContext, webAppContext});
 
