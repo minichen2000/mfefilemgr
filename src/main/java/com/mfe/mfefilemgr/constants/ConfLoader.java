@@ -1,6 +1,5 @@
 package com.mfe.mfefilemgr.constants;
 
-import com.mfe.mfefilemgr.exception.MfeFileMgrException;
 import com.mfe.mfefilemgr.restful.model.mfefilemgr.Provider;
 
 import java.io.File;
@@ -20,17 +19,17 @@ public class ConfLoader {
 		return confLoader;
 	}
 
-	public void loadConf(String confFile) throws MfeFileMgrException {
+	public void loadConf(String confFile) throws ConfLoaderException {
 		loadOneConfFile(confFile);
 		loadReferenceConfFiles(new File(confFile).getParentFile());
 	}
 
-	public String getConf(String name) throws MfeFileMgrException {
+	public String getConf(String name) throws ConfLoaderException {
 		String value = System.getProperty(name);
 		if (null == value) {
 			value = conf.getProperty(name);
 			if (null == value)
-				throw new MfeFileMgrException(Provider.MFEFILEMGR, "-1",
+				throw new ConfLoaderException("-1",
 						"No such configuration: '" + name + "'");
 			return value.trim();
 		} else {
@@ -51,12 +50,12 @@ public class ConfLoader {
 		return conf.containsKey(name);
 	}
 
-	public int getInt(String name) throws MfeFileMgrException {
+	public int getInt(String name) throws ConfLoaderException {
 		String val = getConf(name);
 		try {
 			return Integer.parseInt(val);
 		} catch (NumberFormatException e) {
-			throw new MfeFileMgrException(Provider.MFEFILEMGR, "-1",
+			throw new ConfLoaderException("-1",
 					"Illegal int format: '" + val + "' for: " + name, e);
 		}
 	}
@@ -64,12 +63,12 @@ public class ConfLoader {
 	public int getInt(String name, int defaultValue) {
 		try {
 			return getInt(name);
-		} catch (MfeFileMgrException e) {
+		} catch (ConfLoaderException e) {
 			return defaultValue;
 		}
 	}
 
-	public boolean getBoolean(String name) throws MfeFileMgrException {
+	public boolean getBoolean(String name) throws ConfLoaderException {
 		String value = System.getProperty(name);
 		if (null == value) {
 			value = conf.getProperty(name);
@@ -79,33 +78,33 @@ public class ConfLoader {
 			return true;
 		if ("FALSE".equalsIgnoreCase(value))
 			return false;
-		throw new MfeFileMgrException(Provider.MFEFILEMGR, "-1",
+		throw new ConfLoaderException("-1",
 				"Illegal boolean format: '" + value + "' for: " + name);
 	}
 
 	public boolean getBoolean(String name, boolean defaultValue) {
 		try {
 			return getBoolean(name);
-		} catch (MfeFileMgrException e) {
+		} catch (ConfLoaderException e) {
 			return defaultValue;
 		}
 	}
 
-	private void loadOneConfFile(String file) throws MfeFileMgrException {
+	private void loadOneConfFile(String file) throws ConfLoaderException {
 		try {
 			FileInputStream fin = new FileInputStream(file);
 			conf.load(fin);
 			fin.close();
 		} catch (IOException e) {
-			throw new MfeFileMgrException(Provider.MFEFILEMGR, "-1", e.getMessage(), e);
+			throw new ConfLoaderException("-1", e.getMessage(), e);
 		}
 	}
 
-	private void loadReferenceConfFiles(File dir) throws MfeFileMgrException {
+	private void loadReferenceConfFiles(File dir) throws ConfLoaderException {
 		String referenceConfFiles = null;
 		try {
 			referenceConfFiles = getConf(ConfigKey.REFERENCE_CONF_FILES);
-		} catch (MfeFileMgrException e) {
+		} catch (ConfLoaderException e) {
 			return;
 		}
 		String[] files = referenceConfFiles.split("\\s*,\\s*");
@@ -113,4 +112,17 @@ public class ConfLoader {
 			loadOneConfFile(new File(dir, confFile).getAbsolutePath());
 		}
 	}
+
+	public void setConf(String name, String value){
+		conf.setProperty(name, value);
+	}
+
+	public void setInt(String name, int value){
+		conf.setProperty(name, String.valueOf(value));
+	}
+
+	public void setBoolean(String name, boolean value){
+		conf.setProperty(name, String.valueOf(value));
+	}
+
 }

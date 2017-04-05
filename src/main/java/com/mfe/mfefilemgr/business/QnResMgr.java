@@ -47,6 +47,9 @@ public class QnResMgr extends DefaultMgr {
 
     public BucketManager genBucketManager(String zone) throws Exception {
         Configuration cfg = new Configuration(QnUtils.getZone(zone));
+        if(getAK().isEmpty() || getSK().isEmpty()){
+            throw MfeFileMgrException.AK_SK_EMPTY;
+        }
         Auth auth = Auth.create(getAK(), getSK());
         return new BucketManager(auth, cfg);
     }
@@ -67,7 +70,7 @@ public class QnResMgr extends DefaultMgr {
                         return javax.ws.rs.core.Response.status(javax.ws.rs.core.Response.Status.INTERNAL_SERVER_ERROR).entity(ef).build();
                 }
             default:
-                return null;
+                return javax.ws.rs.core.Response.status(javax.ws.rs.core.Response.Status.INTERNAL_SERVER_ERROR).entity(ef).build();
         }
     }
 

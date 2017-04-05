@@ -45,6 +45,7 @@ public class Utils {
         return javax.ws.rs.core.Response.status(javax.ws.rs.core.Response.Status.NOT_FOUND).entity(ei).build();
     }
     static public MfeFileMgrException toMfeFileMgrException(Exception e){
+        e.printStackTrace();
         if(e instanceof QiniuException){
             return QnUtils.toMfeFileMgrException((QiniuException)e);
         }else if(e instanceof OSSException){

@@ -32,7 +32,10 @@ public class AliyunResMgr extends DefaultMgr {
     private AliyunResMgr() {
     }
 
-    public OSSClient getOSSClient(String endpoint) {
+    public OSSClient getOSSClient(String endpoint)  throws Exception {
+        if(getAK().isEmpty() || getSK().isEmpty()){
+            throw MfeFileMgrException.AK_SK_EMPTY;
+        }
         return new OSSClient(endpoint, getAK(), getSK());
     }
 
@@ -57,7 +60,7 @@ public class AliyunResMgr extends DefaultMgr {
                         return javax.ws.rs.core.Response.status(javax.ws.rs.core.Response.Status.INTERNAL_SERVER_ERROR).entity(ef).build();
                 }
             default:
-                return null;
+                return javax.ws.rs.core.Response.status(javax.ws.rs.core.Response.Status.INTERNAL_SERVER_ERROR).entity(ef).build();
         }
     }
 
