@@ -3,9 +3,7 @@ package com.mfe.mfefilemgr.utils;
 import com.mfe.mfefilemgr.business.AliyunResMgr;
 import com.mfe.mfefilemgr.business.QnResMgr;
 import com.mfe.mfefilemgr.business.intf.IMfeFileMgr;
-import com.mfe.mfefilemgr.constants.ConfigKey;
 import com.mfe.mfefilemgr.restful.model.mfefilemgr.Provider;
-import org.slf4j.IMarkerFactory;
 
 import java.util.HashMap;
 import java.util.Map;

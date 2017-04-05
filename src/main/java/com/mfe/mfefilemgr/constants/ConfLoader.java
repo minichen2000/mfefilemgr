@@ -1,6 +1,5 @@
-package com.mfe.mfefilemgr;
+package com.mfe.mfefilemgr.constants;
 
-import com.mfe.mfefilemgr.constants.ConfigKey;
 import com.mfe.mfefilemgr.exception.MfeFileMgrException;
 import com.mfe.mfefilemgr.restful.model.mfefilemgr.Provider;
 

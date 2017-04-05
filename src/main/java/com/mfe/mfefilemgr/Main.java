@@ -2,6 +2,7 @@ package com.mfe.mfefilemgr;
 
 import com.mfe.mfefilemgr.api.DirApiServiceImpl;
 import com.mfe.mfefilemgr.api.FileApiServiceImpl;
+import com.mfe.mfefilemgr.constants.ConfLoader;
 import com.mfe.mfefilemgr.constants.ConfigKey;
 import com.mfe.mfefilemgr.exception.MfeFileMgrException;
 import com.mfe.mfefilemgr.utils.ClassThief;
@@ -13,10 +14,10 @@ import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.handler.HandlerList;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
+import org.eclipse.jetty.webapp.WebAppContext;
 import org.glassfish.jersey.jackson.JacksonFeature;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.servlet.ServletContainer;
-import org.eclipse.jetty.webapp.WebAppContext;
 
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -30,7 +31,7 @@ public class Main {
 
         String confPath = loadConf();
 
-        System.setProperty("log4j.configurationFile", confPath + "/mfefilemgr.log4j2.xml");
+        System.setProperty("log4j.configurationFile", confPath + "/"+ConfLoader.getInstance().getConf(ConfigKey.LOG_CONF_FILE_NAME, ConfigKey.DEFAULT_LOG_CONF_FILE_NAME));
         LoggerContext loggerContext = (LoggerContext) LogManager.getContext(false);
         loggerContext.reconfigure();
 
@@ -57,7 +58,7 @@ public class Main {
         //webapp context
         WebAppContext webAppContext = new WebAppContext();
         webAppContext.setContextPath("/");
-        //webAppContext.setDescriptor("webapp" + "/WEB-INF/web.xml");
+        webAppContext.setDescriptor("webapp" + "/WEB-INF/web.xml");
 
         URL webAppDir = Thread.currentThread().getContextClassLoader().getResource("webapp");
         if (webAppDir == null) {
@@ -71,13 +72,12 @@ public class Main {
             e.printStackTrace();
         }
 
-        //webAppContext.setParentLoaderPriority(true);
         HandlerList handlers = new HandlerList();
         handlers.setHandlers(new Handler[] {swaggerContext, webAppContext});
 
         ////////////////////////
 
-        final int port = ConfLoader.getInstance().getInt(ConfigKey.MFEFILEMGR_PORT, ConfigKey.DEFAULT_MFEFILEMGR_PORT);
+        final int port = ConfLoader.getInstance().getInt(ConfigKey.SERVER_PORT, ConfigKey.DEFAULT_SERVER_PORT);
         final Server server = new Server(port);
         server.setHandler(handlers);
 

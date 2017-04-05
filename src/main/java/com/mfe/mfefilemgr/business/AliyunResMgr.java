@@ -1,11 +1,9 @@
 package com.mfe.mfefilemgr.business;
 
-import com.aliyun.oss.ClientException;
 import com.aliyun.oss.OSSClient;
-import com.aliyun.oss.OSSException;
 import com.aliyun.oss.model.*;
-import com.mfe.mfefilemgr.ConfLoader;
 import com.mfe.mfefilemgr.business.defaultImpl.DefaultMgr;
+import com.mfe.mfefilemgr.constants.ConfLoader;
 import com.mfe.mfefilemgr.constants.ConfigKey;
 import com.mfe.mfefilemgr.exception.MfeFileMgrException;
 import com.mfe.mfefilemgr.restful.model.mfefilemgr.MfeDirInfo;

@@ -1,23 +1,9 @@
 package com.mfe.mfefilemgr.business.defaultImpl;
 
-import com.mfe.mfefilemgr.ConfLoader;
 import com.mfe.mfefilemgr.business.intf.IMfeFileMgr;
-import com.mfe.mfefilemgr.constants.ConfigKey;
-import com.mfe.mfefilemgr.exception.MfeFileMgrException;
 import com.mfe.mfefilemgr.restful.model.mfefilemgr.MfeDirInfo;
 import com.mfe.mfefilemgr.restful.model.mfefilemgr.MfeFile;
-import com.mfe.mfefilemgr.restful.model.mfefilemgr.MfeFileMgrErrorInfo;
-import com.mfe.mfefilemgr.restful.model.mfefilemgr.Provider;
 import com.mfe.mfefilemgr.utils.Utils;
-import com.mfe.mfefilemgr.utils.qn.QnUtils;
-import com.qiniu.common.Zone;
-import com.qiniu.http.Response;
-import com.qiniu.storage.BucketManager;
-import com.qiniu.storage.Configuration;
-import com.qiniu.storage.model.BatchStatus;
-import com.qiniu.storage.model.FileInfo;
-import com.qiniu.storage.model.FileListing;
-import com.qiniu.util.Auth;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 

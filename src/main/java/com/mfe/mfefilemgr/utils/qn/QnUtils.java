@@ -1,19 +1,15 @@
 package com.mfe.mfefilemgr.utils.qn;
 
-import com.mfe.mfefilemgr.ConfLoader;
+import com.mfe.mfefilemgr.constants.ConfLoader;
 import com.mfe.mfefilemgr.constants.ConfigKey;
 import com.mfe.mfefilemgr.exception.MfeFileMgrException;
 import com.mfe.mfefilemgr.restful.model.mfefilemgr.MfeFile;
-import com.mfe.mfefilemgr.restful.model.mfefilemgr.MfeFileMgrErrorInfo;
 import com.mfe.mfefilemgr.restful.model.mfefilemgr.Provider;
-import com.mfe.mfefilemgr.utils.Utils;
 import com.qiniu.common.QiniuException;
 import com.qiniu.common.Zone;
 import com.qiniu.storage.model.FileInfo;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-import javax.ws.rs.core.Response;
 
 /**
  * Created by minichen on 2017/3/30.
