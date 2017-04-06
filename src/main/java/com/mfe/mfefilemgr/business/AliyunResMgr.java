@@ -66,7 +66,7 @@ public class AliyunResMgr extends DefaultMgr {
 
     @Override
     public char getDirDelimiter() {
-        return ConfLoader.getInstance().getConf(ConfigKey.ALIYUN_DIR_DELIMITER, ConfigKey.DEFAULT_ALIYUN_DIR_DELIMITER).charAt(0);
+        return ConfLoader.getInstance().getConf(ConfigKey.aliyun_dir_delimiter, ConfigKey.default_aliyun_dir_delimiter).charAt(0);
     }
 
     @Override

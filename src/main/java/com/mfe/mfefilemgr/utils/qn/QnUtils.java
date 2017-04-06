@@ -17,11 +17,11 @@ import org.apache.logging.log4j.Logger;
 public class QnUtils {
     private final static Logger log = LogManager.getLogger(QnUtils.class);
     static public String getAK(){
-        return ConfLoader.getInstance().getConf(ConfigKey.QINIU_AK, "");
+        return ConfLoader.getInstance().getConf(ConfigKey.qiniu_ak, "");
     }
 
     static public String getSK(){
-        return ConfLoader.getInstance().getConf(ConfigKey.QINIU_SK, "");
+        return ConfLoader.getInstance().getConf(ConfigKey.qiniu_sk, "");
     }
 
     static public Zone getZone(String zone){

@@ -1,8 +1,11 @@
 package com.mfe.mfefilemgr;
 
+import com.beust.jcommander.JCommander;
+import com.beust.jcommander.Parameter;
 import com.mfe.mfefilemgr.api.DirApiServiceImpl;
 import com.mfe.mfefilemgr.api.FileApiServiceImpl;
 import com.mfe.mfefilemgr.constants.ConfLoader;
+import com.mfe.mfefilemgr.constants.ConfLoaderException;
 import com.mfe.mfefilemgr.constants.ConfigKey;
 import com.mfe.mfefilemgr.utils.ClassThief;
 import org.apache.logging.log4j.Level;
@@ -19,6 +22,7 @@ import org.glassfish.jersey.jackson.JacksonFeature;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.servlet.ServletContainer;
 
+import java.io.File;
 import java.net.URISyntaxException;
 import java.net.URL;
 
@@ -26,22 +30,12 @@ import java.net.URL;
  * Created by chenmin on 2017/3/30.
  */
 public class Main {
-    private static String CONF_FILE_NAME="mfefilemgr.conf.properties";
-    private static String CONF_PATH_VARIABLE_NAME =ConfigKey.MFEFILEMGR_CONFPATH;
     private static Logger log;
-    public static void main(String[] args){
+    public static void main(String[] args) throws Exception{
 
-        String confPath = loadConf();
+        loadConf(args);
 
-        try {
-            if(null!=confPath) System.setProperty("log4j.configurationFile", confPath + "/"+ConfLoader.getInstance().getConf(ConfigKey.LOG_CONF_FILE_NAME, ConfigKey.DEFAULT_LOG_CONF_FILE_NAME));
-        } catch (Exception e) {
-            System.out.println("No log4j2 configurationFile.");
-        }
-        LoggerContext loggerContext = (LoggerContext) LogManager.getContext(false);
-        loggerContext.reconfigure();
-        loggerContext.getRootLogger().setLevel(Level.INFO);
-
+        confLog();
         log = LogManager.getLogger(Main.class);
 
         configProxy();
@@ -84,7 +78,7 @@ public class Main {
 
         ////////////////////////
 
-        final int port = ConfLoader.getInstance().getInt(ConfigKey.SERVER_PORT, ConfigKey.DEFAULT_SERVER_PORT);
+        final int port = ConfLoader.getInstance().getInt(ConfigKey.server_port);
         final Server server = new Server(port);
         server.setHandler(handlers);
 
@@ -111,26 +105,83 @@ public class Main {
         }).start();
     }
 
-    private static String loadConf() {
-        String confPath = System.getProperty(CONF_PATH_VARIABLE_NAME);
-        if (null == confPath) {
-            confPath = System.getenv(CONF_PATH_VARIABLE_NAME);
+    private static void confLog() throws Exception{
+        String log_conf_file=ConfLoader.getInstance().getConf(ConfigKey.log_conf_file, null);
+        if((new File(log_conf_file).canRead())){
+            System.setProperty("log4j.configurationFile", log_conf_file);
+            LoggerContext loggerContext = (LoggerContext) LogManager.getContext(false);
+            loggerContext.reconfigure();
+        }else{
+            LoggerContext loggerContext = (LoggerContext) LogManager.getContext(false);
+            loggerContext.getConfiguration().getRootLogger().setLevel(ConfLoader.getInstance().getBoolean(ConfigKey.debug) ? Level.DEBUG : Level.INFO);
         }
-        if (null == confPath) {
-            confPath = System.getProperty("user.home");
+    }
+
+    private static void loadConf(String[] args) {
+        parseCommandLine(args);
+        if(!ConfLoader.getInstance().getConf(ConfigKey.conf_file, "").isEmpty()){
+            try {
+                ConfLoader.getInstance().loadConf(ConfLoader.getInstance().getConf(ConfigKey.conf_file, ""));
+            } catch (ConfLoaderException e) {
+                e.printStackTrace();
+            }
         }
-        try {
-            ConfLoader.getInstance().loadConf(confPath + "/"+CONF_FILE_NAME);
-        } catch (Exception e) {
-            System.out.println("Warning: '"+CONF_FILE_NAME+"' not found in you home directory or environment '"+ CONF_PATH_VARIABLE_NAME +"'.");
-            System.out.println("Using default values.");
-            return null;
+    }
+
+    private static void parseCommandLine(String[] _args){
+
+        class Args{
+            @Parameter(names={"-"+ConfigKey.server_port}, order = 0, description="Http server port")
+            private int server_port=ConfigKey.default_server_port;
+
+            @Parameter(names={"-"+ConfigKey.conf_file}, order = 1, description = "Configuation file")
+            private String conf_file="";
+
+            @Parameter(names={"-"+ConfigKey.log_conf_file}, order = 2, description ="Log4j2 configuration file")
+            private String log_conf_file="";
+
+            @Parameter(names={"-"+ConfigKey.proxy_host}, order = 3, description="Http proxy host")
+            private String proxy_host="";
+
+            @Parameter(names={"-"+ConfigKey.proxy_port}, order = 4, description = "Http proxy port")
+            private int proxy_port=0;
+
+            @Parameter(names={"-"+ConfigKey.debug}, order = 5, description = "Debug mode (only in case log_conf_file is not available)")
+            private boolean debug=false;
+
+            @Parameter(names={"-help"}, order = 6, help=true, description = "Show this help")
+            private boolean help=false;
         }
-        return confPath;
+        Args args=new Args();
+        JCommander jc=new JCommander(args, _args);
+        if(args.help){
+            jc.usage();
+            System.exit(0);
+        }
+
+        ConfLoader.getInstance().setInt(ConfigKey.server_port, args.server_port);
+        ConfLoader.getInstance().setConf(ConfigKey.conf_file, args.conf_file);
+        ConfLoader.getInstance().setConf(ConfigKey.log_conf_file, args.log_conf_file);
+        ConfLoader.getInstance().setConf(ConfigKey.proxy_host, args.proxy_host);
+        ConfLoader.getInstance().setInt(ConfigKey.proxy_port, args.proxy_port);
+        ConfLoader.getInstance().setBoolean(ConfigKey.debug, args.debug);
+
     }
     private static void shutDown() {
         log.info("Shutdown.");
         System.exit(1);
+    }
+
+
+    private static void configProxy() throws Exception{
+        String host = ConfLoader.getInstance().getConf(ConfigKey.proxy_host);
+        int port = ConfLoader.getInstance().getInt(ConfigKey.proxy_port);
+        if(null!=host && !host.isEmpty() && 0!=port){
+            log.info("http proxy enabled: "+host+':'+port);
+            System.setProperty("http.proxySet", "true");
+            System.setProperty("http.proxyHost", host);
+            System.setProperty("http.proxyPort", ""+port);
+        }
     }
 
     private static void registerMfefilemgrServerImpl() {
@@ -145,15 +196,5 @@ public class Main {
         }
     }
 
-    private static void configProxy(){
-        String host = ConfLoader.getInstance().getConf(ConfigKey.HTTP_PROXYHOST, null);
-        int port = ConfLoader.getInstance().getInt(ConfigKey.HTTP_PROXYPORT, 0);
-        if(null!=host && 0!=port){
-            log.info("http proxy enabled: "+host+':'+port);
-            System.setProperty("http.proxySet", "true");
-            System.setProperty("http.proxyHost", host);
-            System.setProperty("http.proxyPort", ""+port);
-        }
 
-    }
 }

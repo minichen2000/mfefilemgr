@@ -20,11 +20,11 @@ import org.apache.logging.log4j.Logger;
 public class AliyunUtils {
     private final static Logger log = LogManager.getLogger(AliyunUtils.class);
     static public String getAK(){
-        return ConfLoader.getInstance().getConf(ConfigKey.ALIYUN_AK, "");
+        return ConfLoader.getInstance().getConf(ConfigKey.aliyun_ak, "");
     }
 
     static public String getSK(){
-        return ConfLoader.getInstance().getConf(ConfigKey.ALIYUN_SK, "");
+        return ConfLoader.getInstance().getConf(ConfigKey.aliyun_sk, "");
     }
 
 

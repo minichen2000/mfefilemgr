@@ -103,7 +103,7 @@ public class ConfLoader {
 	private void loadReferenceConfFiles(File dir) throws ConfLoaderException {
 		String referenceConfFiles = null;
 		try {
-			referenceConfFiles = getConf(ConfigKey.REFERENCE_CONF_FILES);
+			referenceConfFiles = getConf(ConfigKey.reference_conf_files);
 		} catch (ConfLoaderException e) {
 			return;
 		}

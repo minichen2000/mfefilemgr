@@ -56,7 +56,7 @@ public class QnResMgr extends DefaultMgr {
 
     @Override
     public char getDirDelimiter() {
-        return ConfLoader.getInstance().getConf(ConfigKey.QINIU_DIR_DELIMITER, ConfigKey.DEFAULT_QINIU_DIR_DELIMITER).charAt(0);
+        return ConfLoader.getInstance().getConf(ConfigKey.qiniu_dir_delimiter, ConfigKey.default_qiniu_dir_delimiter).charAt(0);
     }
 
     @Override

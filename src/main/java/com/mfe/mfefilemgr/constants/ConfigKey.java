@@ -1,35 +1,38 @@
 package com.mfe.mfefilemgr.constants;
 
 public class ConfigKey {
-	public static final String MFEFILEMGR_CONFPATH = "MFEFILEMGR_CONFPATH";
+	public static final String reference_conf_files="reference_conf_files";
 
-	public static final String LOG_CONF_FILE_NAME = "LOG_CONF_FILE_NAME";
+	public static final String debug="debug";
 
-	public static final String DEFAULT_LOG_CONF_FILE_NAME = "mfefilemgr.log4j2.xml";
+	public static final String server_port = "server_port";
 
-	public static final String REFERENCE_CONF_FILES = "REFERENCE_CONF_FILES";
+	public static final int default_server_port = 8080;
 
-	public static final String HTTP_PROXYHOST = "HTTP_PROXYHOST";
+	public static final String conf_file = "conf_file";
 
-	public static final String HTTP_PROXYPORT = "HTTP_PROXYPORT";
+	public static final String log_conf_file = "log_conf_file";
 
-	public static final String SERVER_PORT = "SERVER_PORT";
+	public static final String proxy_host = "proxy_host";
 
-	public static final int DEFAULT_SERVER_PORT = 8080;
+	public static final String proxy_port = "proxy_port";
 
-	public static final String QINIU_AK = "QINIU_AK";
+	public static final String qiniu_ak = "qiniu_ak";
 
-	public static final String QINIU_SK = "QINIU_SK";
+	public static final String qiniu_sk = "qiniu_sk";
 
-	public static final String QINIU_DIR_DELIMITER = "QINIU_DIR_DELIMITER";
+	public static final String qiniu_dir_delimiter = "qiniu_dir_delimiter";
 
-	public static final String DEFAULT_QINIU_DIR_DELIMITER = "/";
+	public static final String default_qiniu_dir_delimiter = "/";
 
-	public static final String ALIYUN_AK = "ALIYUN_AK";
+	public static final String aliyun_ak = "aliyun_ak";
 
-	public static final String ALIYUN_SK = "ALIYUN_SK";
+	public static final String aliyun_sk = "aliyun_sk";
 
-	public static final String ALIYUN_DIR_DELIMITER = "ALIYUN_DIR_DELIMITER";
+	public static final String aliyun_dir_delimiter = "aliyun_dir_delimiter";
 
-	public static final String DEFAULT_ALIYUN_DIR_DELIMITER = "/";
+	public static final String default_aliyun_dir_delimiter = "/";
+
+
+
 }

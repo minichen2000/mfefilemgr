@@ -10,17 +10,23 @@
     <packaging>jar</packaging>
 
     <properties>
-        <swagger-model-path>swagger_models</swagger-model-path>
-        <jdkCompileVersion>1.7</jdkCompileVersion>
-        <jettyVersion>9.2.21.v20170120</jettyVersion>
-        <jerseyVersion>2.1</jerseyVersion>
+        <jdkCompileVersion>1.8</jdkCompileVersion>
+        <log4j-version>2.6.2</log4j-version>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <jcommander-version>1.64</jcommander-version>
+        <maven-assembly-plugin-version>2.4.1</maven-assembly-plugin-version>
+        <maven-compiler-plugin-version>3.1</maven-compiler-plugin-version>
+        <maven-clean-plugin-version>2.5</maven-clean-plugin-version>
+        <maven-dependency-plugin-version>2.10</maven-dependency-plugin-version>
+        <maven-resources-plugin-version>3.0.1</maven-resources-plugin-version>
+        <jettyVersion>9.2.21.v20170120</jettyVersion>
+        <jerseyVersion>2.1</jerseyVersion>
         <jackson.version>2.7.5</jackson.version>
+        <swagger-model-path>swagger_models</swagger-model-path>
         <swagger-core-version>1.5.9</swagger-core-version>
         <swagger-codegen-cli-version>2.2.1</swagger-codegen-cli-version>
         <swagger-api-path>gen/swagger-code</swagger-api-path>
-        <log4j-version>2.6.2</log4j-version>
         <maven-assembly-plugin-version>2.4.1</maven-assembly-plugin-version>
         <maven-compiler-plugin-version>3.1</maven-compiler-plugin-version>
         <maven-clean-plugin-version>2.5</maven-clean-plugin-version>
@@ -75,6 +81,12 @@
             <groupId>org.apache.logging.log4j</groupId>
             <artifactId>log4j-jul</artifactId>
             <version>${log4j-version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.beust</groupId>
+            <artifactId>jcommander</artifactId>
+            <version>${jcommander-version}</version>
         </dependency>
 
         <dependency>
