@@ -5,6 +5,7 @@ import com.mfe.mfefilemgr.api.FileApiServiceImpl;
 import com.mfe.mfefilemgr.constants.ConfLoader;
 import com.mfe.mfefilemgr.constants.ConfigKey;
 import com.mfe.mfefilemgr.utils.ClassThief;
+import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.core.LoggerContext;
@@ -39,6 +40,7 @@ public class Main {
         }
         LoggerContext loggerContext = (LoggerContext) LogManager.getContext(false);
         loggerContext.reconfigure();
+        loggerContext.getRootLogger().setLevel(Level.INFO);
 
         log = LogManager.getLogger(Main.class);
 
