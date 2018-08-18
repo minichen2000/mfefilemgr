@@ -86,11 +86,11 @@ public class Main {
         https_config.setSecureScheme("https");
 
         SslContextFactory sslContextFactory = new SslContextFactory();
-        sslContextFactory.setKeyStorePath("keystore");
+        sslContextFactory.setKeyStorePath("keystore.jks");
         // 私钥
-        sslContextFactory.setKeyStorePassword("OBF:1vnc1ugo1vun1uh21vnq1vnc1ugo1vun1uh21vnq");
+        sslContextFactory.setKeyStorePassword("OBF:1apw1bpb1a4719ja1bb11bb31bb519iw1a4n1bpb1apm");
         // 公钥
-        sslContextFactory.setKeyManagerPassword("OBF:1vnc1ugo1vun1uh21vnq1vnc1ugo1vun1uh21vnq");
+        sslContextFactory.setKeyManagerPassword("OBF:1apw1bpb1a4719ja1bb11bb31bb519iw1a4n1bpb1apm");
 
         ServerConnector httpsConnector = new ServerConnector(server,
                 new SslConnectionFactory(sslContextFactory,"http/1.1"),
