@@ -12,11 +12,11 @@ import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.core.LoggerContext;
-import org.eclipse.jetty.server.Handler;
-import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.server.*;
 import org.eclipse.jetty.server.handler.HandlerList;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
+import org.eclipse.jetty.util.ssl.SslContextFactory;
 import org.eclipse.jetty.webapp.WebAppContext;
 import org.glassfish.jersey.jackson.JacksonFeature;
 import org.glassfish.jersey.server.ResourceConfig;
@@ -80,6 +80,26 @@ public class Main {
 
         final int port = ConfLoader.getInstance().getInt(ConfigKey.server_port);
         final Server server = new Server(port);
+
+        //add https
+        HttpConfiguration https_config = new HttpConfiguration();
+        https_config.setSecureScheme("https");
+
+        SslContextFactory sslContextFactory = new SslContextFactory();
+        sslContextFactory.setKeyStorePath("keystore");
+        // 私钥
+        sslContextFactory.setKeyStorePassword("OBF:1vnc1ugo1vun1uh21vnq1vnc1ugo1vun1uh21vnq");
+        // 公钥
+        sslContextFactory.setKeyManagerPassword("OBF:1vnc1ugo1vun1uh21vnq1vnc1ugo1vun1uh21vnq");
+
+        ServerConnector httpsConnector = new ServerConnector(server,
+                new SslConnectionFactory(sslContextFactory,"http/1.1"),
+                new HttpConnectionFactory(https_config));
+        // 设置访问端口
+        httpsConnector.setPort(443);
+        httpsConnector.setIdleTimeout(30000);
+        server.addConnector(httpsConnector);
+        ///////////////////////////////////
         server.setHandler(handlers);
 
 
