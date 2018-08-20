@@ -8,6 +8,7 @@ import com.mfe.mfefilemgr.constants.ConfLoader;
 import com.mfe.mfefilemgr.constants.ConfLoaderException;
 import com.mfe.mfefilemgr.constants.ConfigKey;
 import com.mfe.mfefilemgr.utils.ClassThief;
+import com.mfe.mfefilemgr.utils.HttpsUtils;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -81,25 +82,35 @@ public class Main {
         final int port = ConfLoader.getInstance().getInt(ConfigKey.server_port);
         final Server server = new Server(port);
 
-        //add https
-        HttpConfiguration https_config = new HttpConfiguration();
-        https_config.setSecureScheme("https");
+        final String keystore_file=ConfLoader.getInstance().getConf(ConfigKey.keystore_file);
+        final String keystore_pass=ConfLoader.getInstance().getConf(ConfigKey.keystore_pass);
 
-        SslContextFactory sslContextFactory = new SslContextFactory();
-        sslContextFactory.setKeyStorePath("keystore.jks");
-        // 私钥
-        sslContextFactory.setKeyStorePassword("OBF:1apw1bpb1a4719ja1bb11bb31bb519iw1a4n1bpb1apm");
-        // 公钥
-        sslContextFactory.setKeyManagerPassword("OBF:1apw1bpb1a4719ja1bb11bb31bb519iw1a4n1bpb1apm");
+        //Check if to launch HTTPS
+        if(keystore_file.length()!=0 && keystore_pass.length()!=0){
+            //add https
+            HttpConfiguration https_config = new HttpConfiguration();
+            https_config.setSecureScheme("https");
 
-        ServerConnector httpsConnector = new ServerConnector(server,
-                new SslConnectionFactory(sslContextFactory,"http/1.1"),
-                new HttpConnectionFactory(https_config));
-        // 设置访问端口
-        httpsConnector.setPort(443);
-        httpsConnector.setIdleTimeout(30000);
-        server.addConnector(httpsConnector);
-        ///////////////////////////////////
+            SslContextFactory sslContextFactory = new SslContextFactory();
+            sslContextFactory.setKeyStorePath(keystore_file);
+            // 私钥
+            sslContextFactory.setKeyStorePassword(HttpsUtils.OBFPassword(keystore_pass));
+            // 公钥
+            sslContextFactory.setKeyManagerPassword(HttpsUtils.OBFPassword(keystore_pass));
+
+            log.info("https keystore_file: \n"+keystore_file);
+            //log.info("https keystore_pass: \n"+HttpsUtils.OBFPassword(keystore_pass));
+
+            ServerConnector httpsConnector = new ServerConnector(server,
+                    new SslConnectionFactory(sslContextFactory,"http/1.1"),
+                    new HttpConnectionFactory(https_config));
+            // 设置访问端口
+            httpsConnector.setPort(ConfLoader.getInstance().getInt(ConfigKey.https_port));
+            httpsConnector.setIdleTimeout(30000);
+            server.addConnector(httpsConnector);
+            ///////////////////////////////////
+        }
+
         server.setHandler(handlers);
 
 
@@ -169,7 +180,16 @@ public class Main {
             @Parameter(names={"-"+ConfigKey.debug}, order = 5, description = "Debug mode (only in case log_conf_file is not available)")
             private boolean debug=false;
 
-            @Parameter(names={"-help"}, order = 6, help=true, description = "Show this help")
+            @Parameter(names={"-"+ConfigKey.keystore_file}, order = 6, description = "keystore file path)")
+            private String keystore_file="";
+
+            @Parameter(names={"-"+ConfigKey.keystore_pass}, order = 7, description = "keystore password)")
+            private String keystore_pass="";
+
+            @Parameter(names={"-"+ConfigKey.https_port}, order = 8, description="Https port")
+            private int https_port=ConfigKey.default_https_port;
+
+            @Parameter(names={"-help"}, order = 9, help=true, description = "Show this help")
             private boolean help=false;
         }
         Args args=new Args();
@@ -185,6 +205,9 @@ public class Main {
         ConfLoader.getInstance().setConf(ConfigKey.proxy_host, args.proxy_host);
         ConfLoader.getInstance().setInt(ConfigKey.proxy_port, args.proxy_port);
         ConfLoader.getInstance().setBoolean(ConfigKey.debug, args.debug);
+        ConfLoader.getInstance().setConf(ConfigKey.keystore_file, args.keystore_file);
+        ConfLoader.getInstance().setConf(ConfigKey.keystore_pass, args.keystore_pass);
+        ConfLoader.getInstance().setInt(ConfigKey.https_port, args.https_port);
 
     }
     private static void shutDown() {
