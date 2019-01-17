@@ -11,7 +11,7 @@
 
     <properties>
         <jdkCompileVersion>1.8</jdkCompileVersion>
-        <log4j-version>2.6.2</log4j-version>
+        <log4j-version>2.11.0</log4j-version>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <jcommander-version>1.64</jcommander-version>
@@ -20,18 +20,20 @@
         <maven-clean-plugin-version>2.5</maven-clean-plugin-version>
         <maven-dependency-plugin-version>2.10</maven-dependency-plugin-version>
         <maven-resources-plugin-version>3.0.1</maven-resources-plugin-version>
-        <jettyVersion>9.2.21.v20170120</jettyVersion>
-        <jerseyVersion>2.1</jerseyVersion>
-        <jackson.version>2.7.5</jackson.version>
+        <jettyVersion>9.4.11.v20180605</jettyVersion>
+        <jerseyVersion>2.27</jerseyVersion>
+        <javax.servlet.api.version>3.1.0</javax.servlet.api.version>
+        <jackson.version>2.9.6</jackson.version>
+        <jackson-datatype-threetenbp.version>2.6.4</jackson-datatype-threetenbp.version>
         <swagger-model-path>swagger_models</swagger-model-path>
-        <swagger-core-version>1.5.9</swagger-core-version>
-        <swagger-codegen-cli-version>2.2.1</swagger-codegen-cli-version>
+        <swagger-core-version>1.5.20</swagger-core-version>
+        <swagger-codegen-cli-version>2.3.1</swagger-codegen-cli-version>
         <swagger-api-path>gen/swagger-code</swagger-api-path>
-        <maven-assembly-plugin-version>2.4.1</maven-assembly-plugin-version>
-        <maven-compiler-plugin-version>3.1</maven-compiler-plugin-version>
-        <maven-clean-plugin-version>2.5</maven-clean-plugin-version>
-        <maven-dependency-plugin-version>2.10</maven-dependency-plugin-version>
-        <maven-resources-plugin-version>3.0.1</maven-resources-plugin-version>
+        <maven-assembly-plugin-version>3.1.0</maven-assembly-plugin-version>
+        <maven-compiler-plugin-version>3.7.0</maven-compiler-plugin-version>
+        <maven-clean-plugin-version>3.1.0</maven-clean-plugin-version>
+        <maven-dependency-plugin-version>3.1.1</maven-dependency-plugin-version>
+        <maven-resources-plugin-version>3.1.0</maven-resources-plugin-version>
         <mojo-version>1.5.0</mojo-version>
         <mojo-maven-plugin-version>1.9.1</mojo-maven-plugin-version>
     </properties>
@@ -89,6 +91,20 @@
             <version>${jcommander-version}</version>
         </dependency>
 
+
+        <!-- JSON processing: jackson -->
+        <dependency>
+            <groupId>com.fasterxml.jackson.jaxrs</groupId>
+            <artifactId>jackson-jaxrs-json-provider</artifactId>
+            <version>${jackson.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.datatype</groupId>
+            <artifactId>jackson-datatype-joda</artifactId>
+            <version>${jackson.version}</version>
+        </dependency>
+
+
         <dependency>
             <groupId>org.eclipse.jetty</groupId>
             <artifactId>jetty-server</artifactId>
@@ -114,6 +130,32 @@
             <artifactId>jersey-media-json-jackson</artifactId>
             <version>${jerseyVersion}</version>
         </dependency>
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+            <version>${javax.servlet.api.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.jersey.media</groupId>
+            <artifactId>jersey-media-multipart</artifactId>
+            <version>${jerseyVersion}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.jersey.containers</groupId>
+            <artifactId>jersey-container-servlet-core</artifactId>
+            <version>${jerseyVersion}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.jersey.core</groupId>
+            <artifactId>jersey-common</artifactId>
+            <version>${jerseyVersion}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.jersey.inject</groupId>
+            <artifactId>jersey-hk2</artifactId>
+            <version>${jerseyVersion}</version>
+        </dependency>
+
 
         <dependency>
             <groupId>io.swagger</groupId>
